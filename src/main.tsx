@@ -23,8 +23,8 @@ console.log(DEV_BASE_URL)
 const queryClient = new QueryClient()
 const router = createBrowserRouter([
   {
-    path: Mode === 'development' ? '/' : PROD_BASE_URL,
-    // index: true,
+    path: '/',
+    index: true,
     element: (
       <ProtectedRoute>
         <HomePage />
