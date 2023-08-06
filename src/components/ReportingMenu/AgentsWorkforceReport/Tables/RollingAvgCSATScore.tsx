@@ -1,6 +1,3 @@
-"use client";
-
-import * as React from "react";
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -12,21 +9,9 @@ import {
   getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
-} from "@tanstack/react-table";
-import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react";
+} from '@tanstack/react-table'
+import { ArrowUpDown } from 'lucide-react'
 
-import { Button } from "@/components/ui/button";
-// import { Checkbox } from "@/components/ui/checkbox";
-import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input";
 import {
   Table,
   TableBody,
@@ -34,187 +19,185 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
+} from '@/components/ui/table'
+import { useState } from 'react'
 
 const data: Payment[] = [
   {
-    id: "m5gr84i9",
-    agent_name: "saad",
-    client: "apple",
-    team_lead: "waseef",
-    customer_success_manager: "fatimah",
+    id: 'm5gr84i9',
+    agent_name: 'saad',
+    client: 'apple',
+    team_lead: 'waseef',
+    customer_success_manager: 'fatimah',
     avg_csat_score: 25.56,
   },
   {
-    id: "m5gr84i9s",
-    agent_name: "saad",
-    client: "ball",
-    team_lead: "waseef",
-    customer_success_manager: "fatimah",
+    id: 'm5gr84i9s',
+    agent_name: 'saad',
+    client: 'ball',
+    team_lead: 'waseef',
+    customer_success_manager: 'fatimah',
     avg_csat_score: 25.56,
   },
   {
-    id: "m5gr84i9a",
-    agent_name: "saad",
-    client: "cat",
-    team_lead: "waseef",
-    customer_success_manager: "fatimah",
+    id: 'm5gr84i9a',
+    agent_name: 'saad',
+    client: 'cat',
+    team_lead: 'waseef',
+    customer_success_manager: 'fatimah',
     avg_csat_score: 25.56,
   },
   {
-    id: "m5gr84i9d",
-    agent_name: "saad",
-    client: "dog",
-    team_lead: "waseef",
-    customer_success_manager: "fatimah",
+    id: 'm5gr84i9d',
+    agent_name: 'saad',
+    client: 'dog',
+    team_lead: 'waseef',
+    customer_success_manager: 'fatimah',
     avg_csat_score: 25.56,
   },
   {
-    id: "m5gr84i93",
-    agent_name: "saad",
-    client: "egg",
-    team_lead: "waseef",
-    customer_success_manager: "fatimah",
+    id: 'm5gr84i93',
+    agent_name: 'saad',
+    client: 'egg',
+    team_lead: 'waseef',
+    customer_success_manager: 'fatimah',
     avg_csat_score: 25.56,
   },
   {
-    id: "m5gr84i95",
-    agent_name: "saad",
-    client: "fox",
-    team_lead: "waseef",
-    customer_success_manager: "fatimah",
+    id: 'm5gr84i95',
+    agent_name: 'saad',
+    client: 'fox',
+    team_lead: 'waseef',
+    customer_success_manager: 'fatimah',
     avg_csat_score: 25.56,
   },
   {
-    id: "m5gr84i97",
-    agent_name: "saad",
-    client: "grape",
-    team_lead: "waseef",
-    customer_success_manager: "fatimah",
+    id: 'm5gr84i97',
+    agent_name: 'saad',
+    client: 'grape',
+    team_lead: 'waseef',
+    customer_success_manager: 'fatimah',
     avg_csat_score: 25.56,
   },
   {
-    id: "m5gr84i99",
-    agent_name: "saad",
-    client: "horse",
-    team_lead: "waseef",
-    customer_success_manager: "fatimah",
+    id: 'm5gr84i99',
+    agent_name: 'saad',
+    client: 'horse',
+    team_lead: 'waseef',
+    customer_success_manager: 'fatimah',
     avg_csat_score: 25.56,
   },
   {
-    id: "3u1reuv4",
-    agent_name: "saad",
-    client: "icecream",
-    team_lead: "waseef",
-    customer_success_manager: "fatimah",
+    id: '3u1reuv4',
+    agent_name: 'saad',
+    client: 'icecream',
+    team_lead: 'waseef',
+    customer_success_manager: 'fatimah',
     avg_csat_score: 25.56,
   },
   {
-    id: "derv1ws0",
+    id: 'derv1ws0',
 
-    agent_name: "saad",
-    client: "jman",
-    team_lead: "waseef",
-    customer_success_manager: "fatimah",
+    agent_name: 'saad',
+    client: 'jman',
+    team_lead: 'waseef',
+    customer_success_manager: 'fatimah',
     avg_csat_score: 25.56,
   },
   {
-    id: "5kma53ae",
+    id: '5kma53ae',
 
-    agent_name: "saad",
-    client: "kulfi",
-    team_lead: "waseef",
-    customer_success_manager: "fatimah",
+    agent_name: 'saad',
+    client: 'kulfi',
+    team_lead: 'waseef',
+    customer_success_manager: 'fatimah',
     avg_csat_score: 25.56,
   },
   {
-    id: "bhqecj4p",
+    id: 'bhqecj4p',
 
-    agent_name: "saad",
-    client: "letter",
-    team_lead: "waseef",
-    customer_success_manager: "fatimah",
+    agent_name: 'saad',
+    client: 'letter',
+    team_lead: 'waseef',
+    customer_success_manager: 'fatimah',
     avg_csat_score: 25.56,
   },
-];
+]
 
 export type Payment = {
-  id: string;
-  agent_name: string;
-  client: string;
-  team_lead: string;
-  customer_success_manager: string;
-  avg_csat_score: number;
-};
+  id: string
+  agent_name: string
+  client: string
+  team_lead: string
+  customer_success_manager: string
+  avg_csat_score: number
+}
 
-export const columns: ColumnDef<Payment>[] = [
+const columns: ColumnDef<Payment>[] = [
   {
-    accessorKey: "agent_name",
-    header: "Agent Name",
+    accessorKey: 'agent_name',
+    header: 'Agent Name',
     cell: ({ row }) => (
-      <div className=" text-center font-medium capitalize ">
-        {row.getValue("agent_name")}
+      <div className=' text-center font-medium capitalize '>
+        {row.getValue('agent_name')}
       </div>
     ),
   },
   {
-    accessorKey: "client",
+    accessorKey: 'client',
     header: ({ column }) => {
       return (
         <div
-          className="flex cursor-pointer items-center justify-center hover:stroke-slate-200"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          className='flex cursor-pointer items-center justify-center hover:stroke-slate-200'
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
         >
           Client
-          <ArrowUpDown className="ml-2 h-4 w-4" />
+          <ArrowUpDown className='ml-2 h-4 w-4' />
         </div>
-      );
+      )
     },
     cell: ({ row }) => (
-      <div className=" text-center capitalize ">{row.getValue("client")}</div>
+      <div className=' text-center capitalize '>{row.getValue('client')}</div>
     ),
   },
   {
-    accessorKey: "team_lead",
-    header: () => <div className="text-center">TeamLead</div>,
+    accessorKey: 'team_lead',
+    header: () => <div className='text-center'>TeamLead</div>,
     cell: ({ row }) => {
       return (
-        <div className=" text-center capitalize ">
-          {row.getValue("team_lead")}
+        <div className=' text-center capitalize '>
+          {row.getValue('team_lead')}
         </div>
-      );
+      )
     },
   },
   {
-    accessorKey: "customer_success_manager",
-    header: () => <div className="max-w-[100px] truncate text-center">CSM</div>,
+    accessorKey: 'customer_success_manager',
+    header: () => <div className='max-w-[100px] truncate text-center'>CSM</div>,
     cell: ({ row }) => {
       return (
-        <div className=" text-center capitalize ">
-          {row.getValue("customer_success_manager")}
+        <div className=' text-center capitalize '>
+          {row.getValue('customer_success_manager')}
         </div>
-      );
+      )
     },
   },
   {
-    accessorKey: "avg_csat_score",
-    header: () => <div className="text-right">Avg CSAT Sccore</div>,
+    accessorKey: 'avg_csat_score',
+    header: () => <div className='text-right'>Avg CSAT Sccore</div>,
     cell: ({ row }) => {
-      const amount = parseFloat(row.getValue("avg_csat_score")).toFixed(2);
+      const amount = parseFloat(row.getValue('avg_csat_score')).toFixed(2)
 
-      return <div className="text-center font-medium">{amount}</div>;
+      return <div className='text-center font-medium'>{amount}</div>
     },
   },
-];
+]
 
 export function RollingAvgCSATScore() {
-  const [sorting, setSorting] = React.useState<SortingState>([]);
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    []
-  );
-  const [columnVisibility, setColumnVisibility] =
-    React.useState<VisibilityState>({});
-  const [rowSelection, setRowSelection] = React.useState({});
+  const [sorting, setSorting] = useState<SortingState>([])
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
+  const [rowSelection, setRowSelection] = useState({})
 
   const table = useReactTable({
     data,
@@ -234,13 +217,13 @@ export function RollingAvgCSATScore() {
       columnVisibility,
       rowSelection,
     },
-  });
+  })
 
   return (
-    <div className="flex  py-4">
-      <div className=" w-full rounded-md border">
-        <Table className=" ">
-          <TableHeader className="text-center">
+    <div className='flex  py-4'>
+      <div className=' w-full rounded-md border'>
+        <Table className=' '>
+          <TableHeader className='text-center'>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
@@ -253,7 +236,7 @@ export function RollingAvgCSATScore() {
                             header.getContext()
                           )}
                     </TableHead>
-                  );
+                  )
                 })}
               </TableRow>
             ))}
@@ -263,7 +246,7 @@ export function RollingAvgCSATScore() {
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
+                  data-state={row.getIsSelected() && 'selected'}
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
@@ -279,7 +262,7 @@ export function RollingAvgCSATScore() {
               <TableRow>
                 <TableCell
                   colSpan={columns.length}
-                  className="h-24 text-center"
+                  className='h-24 text-center'
                 >
                   No results.
                 </TableCell>
@@ -289,5 +272,5 @@ export function RollingAvgCSATScore() {
         </Table>
       </div>
     </div>
-  );
+  )
 }
