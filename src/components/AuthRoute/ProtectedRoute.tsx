@@ -1,7 +1,6 @@
 import { useAuthStore } from '@/store/useAuthStore'
 import { Navigate, useLocation } from 'react-router-dom'
 import jwt_decode from 'jwt-decode'
-import { DEV_BASE_URL, Mode, PROD_BASE_URL } from '@/lib/mode'
 
 type Prop = {
   children: JSX.Element
@@ -25,15 +24,7 @@ const ProtectedRoute = ({ children }: Prop) => {
   return access_token ? (
     children
   ) : (
-    <Navigate
-      to={
-        Mode === 'development'
-          ? DEV_BASE_URL + '/login'
-          : PROD_BASE_URL + '/login'
-      }
-      replace
-      state={{ from: location }}
-    />
+    <Navigate to='/login' replace state={{ from: location }} />
   )
 }
 

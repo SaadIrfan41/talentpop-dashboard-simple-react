@@ -10,16 +10,7 @@ import { Toaster } from 'react-hot-toast'
 import ProtectedRoute from './components/AuthRoute/ProtectedRoute.tsx'
 import PublicRoute from './components/AuthRoute/PublicRoute.tsx'
 import HomePage from './App.tsx'
-import { DEV_BASE_URL, Mode, PROD_BASE_URL } from './lib/mode.ts'
 
-// console.log(
-//   // process.env.NODE_ENV,
-//   process.env.PROD_BASE_URL
-//   // process.env.DEV_BASE_URL
-// )
-console.log(Mode)
-console.log(PROD_BASE_URL)
-console.log(DEV_BASE_URL)
 const queryClient = new QueryClient()
 const router = createBrowserRouter([
   {
@@ -30,14 +21,10 @@ const router = createBrowserRouter([
         <HomePage />
       </ProtectedRoute>
     ),
-    // ErrorBoundary: null,
     errorElement: <ErrorPage />,
   },
   {
-    path:
-      Mode === 'development'
-        ? DEV_BASE_URL + '/login'
-        : PROD_BASE_URL + '/login',
+    path: '/login',
     element: (
       <PublicRoute>
         <Login />
@@ -45,10 +32,7 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path:
-      Mode === 'development'
-        ? DEV_BASE_URL + '/register'
-        : PROD_BASE_URL + '/register',
+    path: '/register',
     element: (
       <PublicRoute>
         <Register />
