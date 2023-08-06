@@ -1,6 +1,7 @@
 import Logo from '@/assets/logo.png'
 
 import LoginForm from '@/components/Forms/LoginForm'
+import { Link } from 'react-router-dom'
 
 const Login = () => {
   return (
@@ -11,6 +12,7 @@ const Login = () => {
         Log in
       </h1>
       <LoginForm />
+      <Link to={'/register'}>{'Register'}</Link>
 
       {/* <span className='ml-1 mt-5 text-lg font-normal text-[#69C920]'>
         Forgot password?
