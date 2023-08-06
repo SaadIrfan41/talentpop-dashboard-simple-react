@@ -14,7 +14,11 @@ import HomePage from './App.tsx'
 const queryClient = new QueryClient()
 const router = createBrowserRouter([
   {
-    path: '/',
+    path: `${
+      process.env.NODE_ENV === 'production'
+        ? process.env.PROD_BASE_URL
+        : process.env.DEV_BASE_URL
+    }`,
     index: true,
     element: (
       <ProtectedRoute>
@@ -24,7 +28,10 @@ const router = createBrowserRouter([
     errorElement: <ErrorPage />,
   },
   {
-    path: '/login',
+    path:
+      process.env.NODE_ENV === 'production'
+        ? process.env.PROD_BASE_URL + '/login'
+        : process.env.DEV_BASE_URL + '/login',
     element: (
       <PublicRoute>
         <Login />
@@ -32,7 +39,10 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: '/register',
+    path:
+      process.env.NODE_ENV === 'production'
+        ? process.env.PROD_BASE_URL + '/register'
+        : process.env.DEV_BASE_URL + '/register',
     element: (
       <PublicRoute>
         <Register />
