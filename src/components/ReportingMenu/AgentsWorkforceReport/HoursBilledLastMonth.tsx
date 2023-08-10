@@ -154,85 +154,69 @@ const HoursBilledLastMonth = () => {
       </p>
     )
   }
-
+  console.log('TEST DATA', data?.pages)
   const clientData = data?.pages.flatMap((entry) => {
     return Object.entries(entry).map(([clientName, data]) => {
       const typedData: DataItem[] = data as DataItem[]
+      //@ts-ignore
+      if (typedData !== 'no data found') {
+        // Filter data based on starting and ending date if filters are provided
+        let filteredData = typedData || ['']
 
-      // Filter data based on starting and ending date if filters are provided
-      let filteredData = typedData
-      if (startingDateFilter || endingDateFilter) {
-        filteredData = typedData.filter((item) => item.hours)
-      } else {
-        // If no date filters, use the last month's data
-        filteredData = [typedData[typedData.length - 1]]
-      }
-      // console.log(filteredData)
-      // Calculate total billed hours based on filtered data
-      const totalBilledHours = filteredData.reduce(
-        (total, item) => total + item.hours,
-        0
-      )
+        if (startingDateFilter || endingDateFilter) {
+          filteredData = typedData?.filter((item) => item?.hours)
+        } else {
+          // If no date filters, use the last month's data
+          filteredData = [typedData[typedData?.length - 1]]
+        }
+        // console.log(filteredData)
+        // Calculate total billed hours based on filtered data
+        const totalBilledHours = filteredData.reduce(
+          (total, item) => total + item.hours,
+          0
+        )
 
-      const modifiedClientName = clientName.replace('Customer Service - ', '')
-      // Apply .toFixed(2) if hours is a decimal number
-      const formattedBilledHours = Number.isInteger(totalBilledHours)
-        ? totalBilledHours
-        : totalBilledHours.toFixed(2)
-      return {
-        clientName: modifiedClientName,
-        billedhours: formattedBilledHours,
+        const modifiedClientName = clientName.replace('Customer Service - ', '')
+        // Apply .toFixed(2) if hours is a decimal number
+        const formattedBilledHours = Number?.isInteger(totalBilledHours)
+          ? totalBilledHours
+          : totalBilledHours?.toFixed(2)
+        return {
+          clientName: modifiedClientName,
+          billedhours: formattedBilledHours,
+        }
       }
+      return
     })
   })
 
-  // console.log('Real Data', clientData)
-
-  // const clientData = data?.pages
-  //   .flatMap((entry) => {
-  //     return Object.entries(entry).map(([clientName, data]) => {
-  //       //@ts-ignore
-  //       const lastValue = data[data.length - 1]
-  //       const modifiedClientName = clientName.replace('Customer Service - ', '')
-  //       return { clientName: modifiedClientName, billedhours: lastValue.hours }
-  //     })
-  //   })
-  //   .slice(0, -1)
-
-  // console.log(clientData)
-  // const clientData = Object.entries(flatData).map(([clientName, data]) => {
-  //   //@ts-ignore
-  //   const lastValue = data[data.length - 1]
-  //   const modifiedClientName = clientName.replace('Customer Service - ', '')
-  //   return { clientName: modifiedClientName, billedhours: lastValue.hours }
-  // })
-  // console.log(clientData)
   const clientNames: string[] = []
   const billableHrs: number[] = []
 
-  clientData?.forEach(({ clientName, billedhours }) => {
-    clientNames.push(clientName === null ? 'No Name' : clientName)
-    billableHrs.push(billedhours as number)
+  clientData?.forEach((obj) => {
+    //@ts-ignore
+    clientNames.push(obj?.clientName === null ? 'No Name' : obj?.clientName)
+    billableHrs.push(obj?.billedhours as number)
   })
 
-  //   console.log(clientName, billableHrs)
   return (
-    // <>CLIENTS</>
     <>
       {clientData?.length === 0 ? (
         <p className=' text-base text-[#69C920]'>No Data Found</p>
       ) : (
         <div className='flex divide-x '>
           <div className='flex max-h-[480px] max-w-[350px] flex-col gap-6 overflow-y-auto pt-4 text-base font-medium'>
-            {clientData?.map(({ clientName, billedhours }, index: number) => (
+            {clientData?.map((value, index: number) => (
               <div
                 //@ts-ignore
-                ref={clientData.length - 2 === index ? lastValueRef : null}
+                ref={clientData?.length - 2 === index ? lastValueRef : null}
                 key={index}
                 className='flex gap-16 pl-4 pr-9  '
               >
-                <span>{clientName === null ? 'No Name' : clientName}</span>
-                <span className=' ml-auto'>{billedhours}</span>
+                <span>
+                  {value?.clientName === null ? 'No Name' : value?.clientName}
+                </span>
+                <span className=' ml-auto'>{value?.billedhours}</span>
               </div>
             ))}
             {hasNextPage && (

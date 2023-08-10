@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query'
 import { useFiltersStore } from '@/store/useFiltersStore'
 import { RotateCw } from 'lucide-react'
 import { useAuthStore } from '@/store/useAuthStore'
-import { UpIcon } from '@/components/Icons'
+// import { UpIcon } from '@/components/Icons'
 
 const getTotalInternalMembers = async (
   filterClientName: string[],
@@ -10,8 +10,8 @@ const getTotalInternalMembers = async (
   filterTeamLeadsName: string[],
   filterOMsName: string[],
   filterCSMsName: string[],
-  startingDateFilter: string,
-  endingDateFilter: string,
+  // startingDateFilter: string,
+  // endingDateFilter: string,
   access_token: string | null
 ) => {
   const clientQueryParam = new URLSearchParams()
@@ -93,8 +93,8 @@ const TotalInternalMembers = () => {
         filterTeamLeadsName,
         filterOMsName,
         filterCSMsName,
-        startingDateFilter,
-        endingDateFilter,
+        // startingDateFilter,
+        // endingDateFilter,
         access_token
       ),
   })

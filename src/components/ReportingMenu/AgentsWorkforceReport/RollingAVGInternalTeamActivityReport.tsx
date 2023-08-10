@@ -4,7 +4,7 @@ import { useFiltersStore } from '@/store/useFiltersStore'
 import { RotateCw } from 'lucide-react'
 import { useAuthStore } from '@/store/useAuthStore'
 import { RollingAVGInternalTeamActivityChart } from './Charts/RollingAVGInternalTeamActivityChart'
-import useIntersectionObserver from '@/hooks/useIntersectionObserver'
+// import useIntersectionObserver from '@/hooks/useIntersectionObserver'
 
 interface MonthlyActivity {
   month: string
@@ -85,8 +85,8 @@ const InternalTeamReportAVG = () => {
     data,
     isLoading,
     error,
-    fetchNextPage,
-    hasNextPage,
+    // fetchNextPage,
+    // hasNextPage,
     // isFetchingNextPage,
   } = useInfiniteQuery({
     queryKey: [
@@ -128,10 +128,10 @@ const InternalTeamReportAVG = () => {
       return pages.length + 1
     },
   })
-  const lastValueRef = useIntersectionObserver<HTMLLIElement>(
-    () => void fetchNextPage(),
-    [hasNextPage]
-  )
+  // const lastValueRef = useIntersectionObserver<HTMLLIElement>(
+  //   () => void fetchNextPage(),
+  //   [hasNextPage]
+  // )
 
   if (isLoading)
     return (
