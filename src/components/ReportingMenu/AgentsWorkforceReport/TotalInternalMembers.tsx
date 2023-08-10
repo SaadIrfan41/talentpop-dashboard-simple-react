@@ -43,7 +43,8 @@ const getTotalInternalMembers = async (
 
   try {
     const res = await fetch(
-      `http://18.237.25.116:8000/total-internal-team-members?${clientQueryParam}&${agentsQueryParam}&${teamLeadQueryParam}&${OM_QueryParam}&${CSM_QueryParam}&startdate=${startingDateFilter}&enddate=${endingDateFilter}`,
+      `http://18.237.25.116:8000/total-internal-team-members`,
+      // `http://18.237.25.116:8000/total-internal-team-members?${clientQueryParam}&${agentsQueryParam}&${teamLeadQueryParam}&${OM_QueryParam}&${CSM_QueryParam}&startdate=${startingDateFilter}&enddate=${endingDateFilter}`,
       {
         headers: {
           accept: 'application/json',
@@ -106,27 +107,30 @@ const TotalInternalMembers = () => {
       </p>
     )
   if (error) return <p className=' text-base text-[#69C920]'>Error</p>
-  if (data.message) {
-    if (data.message === 'Not authenticated')
-      return (
-        <p className=' text-base text-[#69C920]'>Login Credentials Invalid</p>
-      )
-    return (
-      <p className=' grid h-[400px] place-items-center  text-3xl font-bold capitalize text-[#69C920]'>
-        {data.message}
-      </p>
-    )
-  }
-  if (data[0] === 'nothing to return') {
-    return (
-      <p className=' grid h-[400px] place-items-center  text-3xl font-bold capitalize text-[#69C920] '>
-        No Data Found
-      </p>
-    )
-  }
+  // if (data.message) {
+  //   if (data.message === 'Not authenticated')
+  //     return (
+  //       <p className=' text-base text-[#69C920]'>Login Credentials Invalid</p>
+  //     )
+  //   return (
+  //     <p className=' grid h-[400px] place-items-center  text-3xl font-bold capitalize text-[#69C920]'>
+  //       {data.message}
+  //     </p>
+  //   )
+  // }
+  // if (data[0] === 'nothing to return') {
+  //   return (
+  //     <p className=' grid h-[400px] place-items-center  text-3xl font-bold capitalize text-[#69C920] '>
+  //       No Data Found
+  //     </p>
+  //   )
+  // }
+  console.log(data)
+
   return (
     <>
-      {data.data.map((data: any, index: number) => (
+      Team members
+      {/* {data.data.map((data: any, index: number) => (
         <div key={index}>
           <span className=' text-base font-medium'>
             {data['hop.name'] ? data['hop.name'] : 'No Name'}
@@ -145,7 +149,7 @@ const TotalInternalMembers = () => {
             />
           </div>
         </div>
-      ))}
+      ))} */}
     </>
   )
 }

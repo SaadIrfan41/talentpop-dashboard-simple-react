@@ -60,9 +60,9 @@ const OperationManagerFilter = () => {
 
     const filteredNames = data.filter((item: any) => {
       const name =
-        item['Operations Manager'] === null
+        item['operations_manager_name'] === null
           ? 'No Name'
-          : item['Operations Manager'].toLowerCase()
+          : item['operations_manager_name'].toLowerCase()
       const firstChar = name[0]
       return firstChar?.toLowerCase() === alphabet?.toLowerCase()
     })
@@ -75,7 +75,7 @@ const OperationManagerFilter = () => {
 
     const filteredNames = data.filter(
       (item: any) =>
-        item['Operations Manager']
+        item['operations_manager_name']
           ?.toLowerCase()
           .includes(searchText.toLowerCase())
     )
@@ -105,9 +105,9 @@ const OperationManagerFilter = () => {
 
     return filteredData.map((item: any, index: any) => {
       const name =
-        item['Operations Manager'] === null
+        item['operations_manager_name'] === null
           ? 'No Name'
-          : item['Operations Manager']
+          : item['operations_manager_name']
       // console.log("NAME",name);
       let firstChar
       //   firstChar = name[0]?.toUpperCase();

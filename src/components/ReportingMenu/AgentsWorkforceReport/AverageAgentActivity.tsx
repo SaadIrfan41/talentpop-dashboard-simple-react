@@ -117,9 +117,9 @@ const AverageAgentActivity = () => {
 
   return (
     <>
-      {data[0]?.average_activity === null
+      {data?.data[0]?.average_activity === null
         ? 0
-        : data[0]?.average_activity?.toFixed(2) || 0}
+        : data?.data[0]?.avg_activity?.toFixed(2) || 0}
 
       <StatsPositiveIcon />
     </>

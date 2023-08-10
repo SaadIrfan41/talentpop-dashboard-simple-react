@@ -100,7 +100,7 @@ const AgentsWorkforceReport = () => {
             <div className='min-h-[500px]  overflow-y-auto  rounded-2xl  border  '>
               <div className='flex items-center px-3 py-4'>
                 <span className='  text-base font-extrabold '>
-                  Client Name and # of Agents
+                  Client Name and No. Agents
                 </span>
                 <div className='ml-auto flex items-center gap-3'>
                   <ExpandIcon />

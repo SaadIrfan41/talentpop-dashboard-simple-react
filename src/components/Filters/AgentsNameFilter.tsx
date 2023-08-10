@@ -58,7 +58,9 @@ const AgentsNameFilter = () => {
 
     const filteredNames = data.filter((item: any) => {
       const name =
-        item['name'] === null ? 'No Name' : item['name'].toLowerCase()
+        item['users.name'] === null
+          ? 'No Name'
+          : item['users.name'].toLowerCase()
       const firstChar = name[0]
       return firstChar.toLowerCase() === alphabet.toLowerCase()
     })
@@ -71,7 +73,7 @@ const AgentsNameFilter = () => {
 
     const filteredNames = data.filter(
       (item: any) =>
-        item['name']?.toLowerCase().includes(searchText.toLowerCase())
+        item['users.name']?.toLowerCase().includes(searchText.toLowerCase())
     )
     setFilteredData(filteredNames)
   }
@@ -98,7 +100,7 @@ const AgentsNameFilter = () => {
     let currentAlphabet: any = null
 
     return filteredData.map((item: any, index: any) => {
-      const name = item['name'] === null ? 'No Name' : item['name']
+      const name = item['users.name'] === null ? 'No Name' : item['users.name']
       // console.log("NAME",name);
       let firstChar
       //   firstChar = name[0]?.toUpperCase();

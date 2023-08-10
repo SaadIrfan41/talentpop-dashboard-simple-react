@@ -61,9 +61,9 @@ const CSMNameFilter = () => {
 
     const filteredNames = data.filter((item: any) => {
       const name =
-        item['customer_success_manager_full_name__written_'] === null
+        item['customer_success_manager_name'] === null
           ? 'No Name'
-          : item['customer_success_manager_full_name__written_']?.toLowerCase()
+          : item['customer_success_manager_name']?.toLowerCase()
       if (name) {
         const firstChar = name[0]
         return firstChar?.toLowerCase() === alphabet?.toLowerCase()
@@ -78,7 +78,7 @@ const CSMNameFilter = () => {
 
     const filteredNames = data.filter(
       (item: any) =>
-        item['customer_success_manager_full_name__written_']
+        item['customer_success_manager_name']
           ?.toLowerCase()
           .includes(searchText.toLowerCase())
     )
@@ -108,9 +108,9 @@ const CSMNameFilter = () => {
 
     return filteredData.map((item: any, index: any) => {
       const name =
-        item['customer_success_manager_full_name__written_'] === null
+        item['customer_success_manager_name'] === null
           ? 'No Name'
-          : item['customer_success_manager_full_name__written_']
+          : item['customer_success_manager_name']
       // console.log("NAME",name);
       let firstChar
       //   firstChar = name[0]?.toUpperCase();

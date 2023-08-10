@@ -130,8 +130,10 @@ const AgentsHighActivityReport = () => {
   const activityAvg: string[] = []
 
   data?.forEach((obj: any) => {
-    agentsName.push(obj['hau.name'] === null ? 'No Name' : obj['hau.name'])
-    activityAvg.push(obj['avg_Activity'].toFixed(2))
+    agentsName.push(
+      obj['members.users.name'] === null ? 'No Name' : obj['members.users.name']
+    )
+    activityAvg.push(obj['avg_activity'].toFixed(2))
   })
 
   return (

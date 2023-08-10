@@ -124,7 +124,7 @@ const TotalActiveAgents = () => {
 
   return (
     <>
-      {data?.data[0]?.count_user_id || 0}
+      {data?.data[0]?.total_users || 0}
       <StatsPositiveIcon />
     </>
   )

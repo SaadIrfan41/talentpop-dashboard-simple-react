@@ -58,7 +58,9 @@ const ClientsNameFilter = () => {
 
     const filteredNames = data.filter((item: any) => {
       const name =
-        item['hop.name'] === null ? 'No Name' : item['hop.name'].toLowerCase()
+        item['projects.name'] === null
+          ? 'No Name'
+          : item['projects.name'].toLowerCase()
       const firstChar = name?.charAt(name.indexOf('-') + 2)
       return firstChar.toLowerCase() === alphabet.toLowerCase()
     })
@@ -71,7 +73,7 @@ const ClientsNameFilter = () => {
 
     const filteredNames = data.filter(
       (item: any) =>
-        item['hop.name']?.toLowerCase().includes(searchText.toLowerCase())
+        item['projects.name']?.toLowerCase().includes(searchText.toLowerCase())
     )
     setFilteredData(filteredNames)
   }
@@ -97,7 +99,8 @@ const ClientsNameFilter = () => {
     let currentAlphabet: any = null
 
     return filteredData.map((item: any, index: any) => {
-      const name = item['hop.name'] === null ? 'No Name' : item['hop.name']
+      const name =
+        item['projects.name'] === null ? 'No Name' : item['projects.name']
       // console.log("NAME",name);
       let firstChar
       firstChar = name?.charAt(name?.indexOf('-') + 2)?.toUpperCase()
@@ -212,6 +215,7 @@ const ClientsNameFilter = () => {
       )
     return <p className=' text-base text-[#69C920]'>{data.message}</p>
   }
+
   return (
     <div style={{ zIndex: 10 }}>
       <button

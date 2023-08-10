@@ -10,8 +10,15 @@ import { Toaster } from 'react-hot-toast'
 import ProtectedRoute from './components/AuthRoute/ProtectedRoute.tsx'
 import PublicRoute from './components/AuthRoute/PublicRoute.tsx'
 import HomePage from './App.tsx'
+import ClientsWithAgents from './components/testing/test.tsx'
 
-const queryClient = new QueryClient()
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false, // default: true
+    },
+  },
+})
 const router = createBrowserRouter([
   {
     path: '/',
@@ -21,6 +28,12 @@ const router = createBrowserRouter([
         <HomePage />
       </ProtectedRoute>
     ),
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: '/test',
+    // index: true,
+    element: <ClientsWithAgents />,
     errorElement: <ErrorPage />,
   },
   {

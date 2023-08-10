@@ -77,11 +77,11 @@ const TotalInternalTeamMembers = () => {
   const { data, isLoading, error } = useQuery({
     queryKey: [
       'total-internal-team-members',
-      filterClientName,
-      filterAgentsName,
-      filterTeamLeadsName,
-      filterOMsName,
-      filterCSMsName,
+      // filterClientName,
+      // filterAgentsName,
+      // filterTeamLeadsName,
+      // filterOMsName,
+      // filterCSMsName,
       startingDateFilter,
       endingDateFilter,
     ],
@@ -115,7 +115,7 @@ const TotalInternalTeamMembers = () => {
   }
   return (
     <>
-      {data.data[0]?.sum_count_hubstaff_all_users}
+      {data.data[0]?.total_users}
 
       <StatsNegativeIcon />
     </>

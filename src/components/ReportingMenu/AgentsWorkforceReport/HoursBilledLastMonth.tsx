@@ -1,9 +1,16 @@
-import { useQuery } from '@tanstack/react-query'
+import { useInfiniteQuery } from '@tanstack/react-query'
 
 import { useFiltersStore } from '@/store/useFiltersStore'
 import { RotateCw } from 'lucide-react'
 import { useAuthStore } from '@/store/useAuthStore'
 import { MonthlyBilledClientsChart } from './Charts/MonthlyBilledClientsChart'
+import useIntersectionObserver from '@/hooks/useIntersectionObserver'
+
+interface DataItem {
+  month: string
+  hours: number
+  minutes: number
+}
 
 const getHoursBilledLastMonth = async (
   filterClientName: string[],
@@ -13,7 +20,8 @@ const getHoursBilledLastMonth = async (
   filterCSMsName: string[],
   startingDateFilter: string,
   endingDateFilter: string,
-  access_token: string | null
+  access_token: string | null,
+  pageParam: number
 ) => {
   const clientQueryParam = new URLSearchParams()
 
@@ -44,7 +52,7 @@ const getHoursBilledLastMonth = async (
 
   try {
     const res = await fetch(
-      `http://18.237.25.116:8000/hour-billed-per-client-last-month?${clientQueryParam}&${agentsQueryParam}&${teamLeadQueryParam}&${OM_QueryParam}&${CSM_QueryParam}&startdate=${startingDateFilter}&enddate=${endingDateFilter}`,
+      `http://18.237.25.116:8000/hour-billed-per-client-each-month?${clientQueryParam}&${agentsQueryParam}&${teamLeadQueryParam}&${OM_QueryParam}&${CSM_QueryParam}&startdate=${startingDateFilter}&enddate=${endingDateFilter}&page=${pageParam}`,
       {
         headers: {
           accept: 'application/json',
@@ -74,7 +82,14 @@ const HoursBilledLastMonth = () => {
   } = useFiltersStore()
   const { access_token } = useAuthStore()
 
-  const { data, isLoading, error } = useQuery({
+  const {
+    data,
+    isLoading,
+    error,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useInfiniteQuery({
     queryKey: [
       'hours-billed-last-month',
       filterClientName,
@@ -85,7 +100,7 @@ const HoursBilledLastMonth = () => {
       startingDateFilter,
       endingDateFilter,
     ],
-    queryFn: () =>
+    queryFn: ({ pageParam = 1 }) =>
       getHoursBilledLastMonth(
         filterClientName,
         filterAgentsName,
@@ -94,10 +109,31 @@ const HoursBilledLastMonth = () => {
         filterCSMsName,
         startingDateFilter,
         endingDateFilter,
-        access_token
+        access_token,
+        Number(pageParam)
       ),
+    getNextPageParam: (lastPage, pages) => {
+      // console.log('LAST PAGE', lastPage)
+      if (lastPage.message === 'no data found') {
+        // console.log('No Data Found')
+        return undefined
+      }
+      if (lastPage.message === 'Not authenticated') {
+        // console.log('User Not Authorized ')
+        return undefined
+      }
+      if (lastPage.message) {
+        // console.log(lastPage.message)
+        return undefined
+      }
+      return pages.length + 1
+    },
   })
 
+  const lastValueRef = useIntersectionObserver<HTMLLIElement>(
+    () => void fetchNextPage(),
+    [hasNextPage]
+  )
   if (isLoading)
     return (
       <p className=' grid h-[400px] w-full place-items-center  text-center text-3xl  font-bold  capitalize text-[#69C920]'>
@@ -107,71 +143,118 @@ const HoursBilledLastMonth = () => {
       </p>
     )
   if (error) return <p className=' text-base text-[#69C920]'>Error</p>
-  if (data.message) {
-    if (data.message === 'Not authenticated')
+  if (data?.pages[0].message) {
+    if (data?.pages[0].message === 'Not authenticated')
       return (
         <p className=' text-base text-[#69C920]'>Login Credentials Invalid</p>
       )
     return (
-      <p className=' grid h-[400px] place-items-center  text-3xl font-bold capitalize text-[#69C920] '>
-        {data.message}
+      <p className=' grid h-[400px] place-items-center  text-3xl font-bold capitalize text-[#69C920]'>
+        {data?.pages[0].message}
       </p>
     )
   }
-  if (data[0] === 'nothing to return') {
-    return (
-      <p className=' grid h-[400px] place-items-center  text-3xl font-bold capitalize text-[#69C920] '>
-        No Data Found
-      </p>
-    )
-  }
-  if (data[0] === 'Nothing to return') {
-    return (
-      <p className=' grid h-[400px] place-items-center  text-3xl font-bold capitalize text-[#69C920] '>
-        No Data Found
-      </p>
-    )
-  }
-  const clientName: string[] = []
-  const billableHrs: string[] = []
 
-  data?.data?.forEach((obj: any) => {
-    clientName.push(obj['hop.name'] === null ? 'No Name' : obj['hop.name'])
-    billableHrs.push(obj['summed_hours'].toFixed(2))
+  const clientData = data?.pages.flatMap((entry) => {
+    return Object.entries(entry).map(([clientName, data]) => {
+      const typedData: DataItem[] = data as DataItem[]
+
+      // Filter data based on starting and ending date if filters are provided
+      let filteredData = typedData
+      if (startingDateFilter || endingDateFilter) {
+        filteredData = typedData.filter((item) => item.hours)
+      } else {
+        // If no date filters, use the last month's data
+        filteredData = [typedData[typedData.length - 1]]
+      }
+      // console.log(filteredData)
+      // Calculate total billed hours based on filtered data
+      const totalBilledHours = filteredData.reduce(
+        (total, item) => total + item.hours,
+        0
+      )
+
+      const modifiedClientName = clientName.replace('Customer Service - ', '')
+      // Apply .toFixed(2) if hours is a decimal number
+      const formattedBilledHours = Number.isInteger(totalBilledHours)
+        ? totalBilledHours
+        : totalBilledHours.toFixed(2)
+      return {
+        clientName: modifiedClientName,
+        billedhours: formattedBilledHours,
+      }
+    })
   })
 
-  // const clientName: string[] = data.data.map((obj: any) =>
-  //   obj["hop.name"] === null ? "No Name" : obj["hop.name"]
-  // );
-  // const billableHrs: string[] = data.data.map((obj: any) =>
-  //   obj["summed_hours"].toFixed(2)
-  // );
+  // console.log('Real Data', clientData)
+
+  // const clientData = data?.pages
+  //   .flatMap((entry) => {
+  //     return Object.entries(entry).map(([clientName, data]) => {
+  //       //@ts-ignore
+  //       const lastValue = data[data.length - 1]
+  //       const modifiedClientName = clientName.replace('Customer Service - ', '')
+  //       return { clientName: modifiedClientName, billedhours: lastValue.hours }
+  //     })
+  //   })
+  //   .slice(0, -1)
+
+  // console.log(clientData)
+  // const clientData = Object.entries(flatData).map(([clientName, data]) => {
+  //   //@ts-ignore
+  //   const lastValue = data[data.length - 1]
+  //   const modifiedClientName = clientName.replace('Customer Service - ', '')
+  //   return { clientName: modifiedClientName, billedhours: lastValue.hours }
+  // })
+  // console.log(clientData)
+  const clientNames: string[] = []
+  const billableHrs: number[] = []
+
+  clientData?.forEach(({ clientName, billedhours }) => {
+    clientNames.push(clientName === null ? 'No Name' : clientName)
+    billableHrs.push(billedhours as number)
+  })
+
   //   console.log(clientName, billableHrs)
   return (
-    <div className='flex divide-x '>
-      <div className='flex max-h-[480px] max-w-[350px] flex-col gap-6 overflow-y-auto pt-4 text-base font-medium'>
-        {data?.data?.map((data: any, index: number) => (
-          //   <div key={index} className='flex gap-16 pl-4 pr-9  '>
-          //     <span>{clientName[index]}</span>
-          //     <span className=' ml-auto'>{billableHrs[index]}</span>
-          //   </div>
-          <div key={index} className='flex gap-16 pl-4 pr-9  '>
-            <span>
-              {data['hop.name'] === null ? 'No Name' : data['hop.name']}
-            </span>
-            <span className=' ml-auto'>{data['summed_hours'].toFixed(2)}</span>
+    // <>CLIENTS</>
+    <>
+      {clientData?.length === 0 ? (
+        <p className=' text-base text-[#69C920]'>No Data Found</p>
+      ) : (
+        <div className='flex divide-x '>
+          <div className='flex max-h-[480px] max-w-[350px] flex-col gap-6 overflow-y-auto pt-4 text-base font-medium'>
+            {clientData?.map(({ clientName, billedhours }, index: number) => (
+              <div
+                //@ts-ignore
+                ref={clientData.length - 2 === index ? lastValueRef : null}
+                key={index}
+                className='flex gap-16 pl-4 pr-9  '
+              >
+                <span>{clientName === null ? 'No Name' : clientName}</span>
+                <span className=' ml-auto'>{billedhours}</span>
+              </div>
+            ))}
+            {hasNextPage && (
+              <p className='text-base text-[#69C920] text-center pb-2 flex justify-center'>
+                {isFetchingNextPage ? (
+                  <RotateCw className='mr-2 h-5 w-5 animate-spin' />
+                ) : (
+                  'No More Data'
+                )}
+              </p>
+            )}
           </div>
-        ))}
-      </div>
-      <div className=' mx-auto max-h-[480px] w-full flex-1 overflow-x-scroll '>
-        {/* <MyResponsiveBar data={BarsData} /> */}
 
-        <MonthlyBilledClientsChart
-          clientName={clientName}
-          billableHrs={billableHrs}
-        />
-      </div>
-    </div>
+          <div className=' mx-auto max-h-[480px] w-full flex-1 overflow-x-scroll '>
+            <MonthlyBilledClientsChart
+              clientName={clientNames}
+              billableHrs={billableHrs}
+            />
+          </div>
+        </div>
+      )}
+    </>
   )
 }
 

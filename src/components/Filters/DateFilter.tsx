@@ -20,7 +20,7 @@ const DateFilter = () => {
   return (
     <div style={{ zIndex: 10 }}>
       <button
-        disabled={showModal}
+        // disabled={showModal}
         onClick={() => setshowModal(!showModal)}
         className=' relative flex items-center rounded-full border p-1  pl-3 text-sm font-bold text-[#163143]'
       >
@@ -29,7 +29,7 @@ const DateFilter = () => {
       </button>
       {showModal && (
         <div
-          ref={clickOutsideRef}
+          // ref={clickOutsideRef}
           className=' absolute mx-auto mt-3 min-w-[300px] max-w-xl  rounded-3xl  bg-white shadow-2xl'
         >
           <div className='  flex flex-col items-center py-5 '>

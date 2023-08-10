@@ -62,6 +62,20 @@ const getTotalBilledHours = async (
     return { message: 'Internal Server Error' }
   }
 }
+
+function formatNumberToShort(number: number) {
+  if (number < 1000) {
+    return number.toString()
+  } else if (number < 1000000) {
+    return (number / 1000).toFixed(1) + 'K'
+  } else if (number < 1000000000) {
+    return (number / 1000000).toFixed(1) + 'M'
+  } else if (number < 1000000000000) {
+    return (number / 1000000000).toFixed(1) + 'B'
+  } else {
+    return (number / 1000000000000).toFixed(1) + 'T'
+  }
+}
 const TotalBilledHours = () => {
   const {
     filterClientName,
@@ -115,8 +129,10 @@ const TotalBilledHours = () => {
   }
 
   return (
-    <div className='flex items-center '>
-      {data?.total_hours?.toFixed(2) || 0}
+    <div className='flex items-center'>
+      {data?.data[0].total_hours
+        ? formatNumberToShort(data?.data[0].total_hours)
+        : 0}
 
       <StatsNegativeIcon />
     </div>

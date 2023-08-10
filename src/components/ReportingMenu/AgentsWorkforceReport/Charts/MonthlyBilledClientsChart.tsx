@@ -32,7 +32,7 @@ export function MonthlyBilledClientsChart({ clientName, billableHrs }: any) {
   const [chartData, setChartData] = useState<ChartData<'bar'>>({
     datasets: [],
   })
-
+  // console.log('Client inside chart', clientName)
   useEffect(() => {
     const chart = chartRef.current
 
@@ -66,7 +66,8 @@ export function MonthlyBilledClientsChart({ clientName, billableHrs }: any) {
 
   const options = {
     // indexAxis: 'x' as const,
-    barThickness: clientName.length < 200 ? 50 : 10,
+    // barThickness: clientName.length < 200 ? 50 : 10,
+    barThickness: clientName.length < 30 ? 30 : 10,
 
     maintainAspectRatio: false,
     elements: {
@@ -93,13 +94,13 @@ export function MonthlyBilledClientsChart({ clientName, billableHrs }: any) {
       // },
     },
   }
-  console.log('CLIENT NAMES', clientName.length)
+  console.log('CLIENT NAMES Length', clientName.length)
 
   return (
     <div
       // style={{ width: clientName.length * 20 }}
       style={{
-        width: clientName.length < 200 ? '100%' : clientName.length * 10,
+        width: clientName.length < 100 ? '100%' : clientName.length * 10,
       }}
       className='mx-auto h-[450px]  '
     >

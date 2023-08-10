@@ -36,7 +36,11 @@ const options = {
     },
   },
   barThickness: 12,
-
+  scales: {
+    x: {
+      type: 'logarithmic',
+    },
+  },
   plugins: {
     legend: {
       display: false,
@@ -84,6 +88,7 @@ export function AgentsHighActivityChart({ agentsName, activityAvg }: any) {
     >
       <Chart
         ref={chartRef}
+        //@ts-ignore
         options={options}
         type='bar'
         data={chartData}

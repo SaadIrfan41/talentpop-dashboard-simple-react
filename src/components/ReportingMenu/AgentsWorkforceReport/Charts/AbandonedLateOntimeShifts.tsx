@@ -126,10 +126,10 @@ const AbandonedLateOntimeShifts = () => {
   }
 
   const values = [
-    data[0].count_late,
-    data[0].count_abandoned,
-    data[0].count_missed,
-    data[0].count_ontime,
+    data[0].late_count,
+    data[0].abandoned_count,
+    data[0].missed_count,
+    data[0].ontime_count,
   ]
   const dataAvaliable = !areAllZeros(values)
 
@@ -139,10 +139,10 @@ const AbandonedLateOntimeShifts = () => {
     datasets: [
       {
         data: [
-          data[0].count_late,
-          data[0].count_abandoned,
-          data[0].count_missed,
-          data[0].count_ontime,
+          data[0].late_count,
+          data[0].abandoned_count,
+          data[0].missed_count,
+          data[0].ontime_count,
         ],
         backgroundColor: ['#398D5B', '#6EF96C', '#1D542C', '#133418'],
         borderColor: ['#398D5B', '#6EF96C', '#1D542C', '#133418'],

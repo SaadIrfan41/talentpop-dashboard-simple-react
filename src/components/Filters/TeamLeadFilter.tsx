@@ -60,9 +60,9 @@ const TeamLeadsNameFilter = () => {
 
     const filteredNames = data.filter((item: any) => {
       const name =
-        item['team_lead__written_'] === null
+        item['team_lead_name'] === null
           ? 'No Name'
-          : item['team_lead__written_'].toLowerCase()
+          : item['team_lead_name'].toLowerCase()
       const firstChar = name[0]
       return firstChar?.toLowerCase() === alphabet?.toLowerCase()
     })
@@ -75,9 +75,7 @@ const TeamLeadsNameFilter = () => {
 
     const filteredNames = data.filter(
       (item: any) =>
-        item['team_lead__written_']
-          ?.toLowerCase()
-          .includes(searchText.toLowerCase())
+        item['team_lead_name']?.toLowerCase().includes(searchText.toLowerCase())
     )
     setFilteredData(filteredNames)
   }
@@ -105,9 +103,7 @@ const TeamLeadsNameFilter = () => {
 
     return filteredData.map((item: any, index: any) => {
       const name =
-        item['team_lead__written_'] === null
-          ? 'No Name'
-          : item['team_lead__written_']
+        item['team_lead_name'] === null ? 'No Name' : item['team_lead_name']
       // console.log("NAME",name);
       let firstChar
       //   firstChar = name[0]?.toUpperCase();
