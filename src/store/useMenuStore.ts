@@ -13,7 +13,7 @@ interface Actions {
 const INITIAL_STATE: State = {
   isLoading: false,
   error: null,
-  reportingMenu: 0,
+  reportingMenu: 1,
 }
 
 export const useMenuStore = create<State & Actions>((set) => ({

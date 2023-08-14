@@ -3,16 +3,16 @@ import { useInfiniteQuery } from '@tanstack/react-query'
 import { useFiltersStore } from '@/store/useFiltersStore'
 import { RotateCw } from 'lucide-react'
 import { useAuthStore } from '@/store/useAuthStore'
-import { MonthlyBilledClientsChart } from './Charts/MonthlyBilledClientsChart'
+// import { RollingAVGInternalTeamActivityChart } from './Charts/RollingAVGInternalTeamActivityChart'
 import useIntersectionObserver from '@/hooks/useIntersectionObserver'
+import { MonthlyBilledClientsChart } from './Charts/MonthlyBilledClientsChart'
 
-interface DataItem {
+interface MonthlyActivity {
   month: string
-  hours: number
-  minutes: number
+  monthly_rolling_avg_activity: number
 }
 
-const getHoursBilledLastMonth = async (
+const getAgentsReportAVG = async (
   filterClientName: string[],
   filterAgentsName: string[],
   filterTeamLeadsName: string[],
@@ -52,7 +52,7 @@ const getHoursBilledLastMonth = async (
 
   try {
     const res = await fetch(
-      `http://18.237.25.116:8000/hour-billed-per-client-each-month?${clientQueryParam}&${agentsQueryParam}&${teamLeadQueryParam}&${OM_QueryParam}&${CSM_QueryParam}&startdate=${startingDateFilter}&enddate=${endingDateFilter}&page=${pageParam}`,
+      `http://18.237.25.116:8000/rolling-average-agent-activity-report?${clientQueryParam}&${agentsQueryParam}&${teamLeadQueryParam}&${OM_QueryParam}&${CSM_QueryParam}&startdate=${startingDateFilter}&enddate=${endingDateFilter}&page=${pageParam}`,
       {
         headers: {
           accept: 'application/json',
@@ -70,7 +70,7 @@ const getHoursBilledLastMonth = async (
     return { message: 'Internal Server Error' }
   }
 }
-const HoursBilledLastMonth = () => {
+const RollingAvgAgentsActivityReport = () => {
   const {
     filterClientName,
     filterAgentsName,
@@ -91,7 +91,7 @@ const HoursBilledLastMonth = () => {
     isFetchingNextPage,
   } = useInfiniteQuery({
     queryKey: [
-      'hours-billed-last-month',
+      'agents-report-avg',
       filterClientName,
       filterAgentsName,
       filterTeamLeadsName,
@@ -101,7 +101,7 @@ const HoursBilledLastMonth = () => {
       endingDateFilter,
     ],
     queryFn: ({ pageParam = 1 }) =>
-      getHoursBilledLastMonth(
+      getAgentsReportAVG(
         filterClientName,
         filterAgentsName,
         filterTeamLeadsName,
@@ -129,11 +129,11 @@ const HoursBilledLastMonth = () => {
       return pages.length + 1
     },
   })
-
   const lastValueRef = useIntersectionObserver<HTMLLIElement>(
     () => void fetchNextPage(),
     [hasNextPage]
   )
+
   if (isLoading)
     return (
       <p className=' grid h-[400px] w-full place-items-center  text-center text-3xl  font-bold  capitalize text-[#69C920]'>
@@ -154,52 +154,51 @@ const HoursBilledLastMonth = () => {
       </p>
     )
   }
-  // console.log('TEST DATA', data?.pages)
+
+  // console.log(data?.pages[0].name)
+  console.log('TEST DATA', data?.pages)
   const clientData = data?.pages.flatMap((entry) => {
-    return Object.entries(entry).map(([clientName, data]) => {
-      const typedData: DataItem[] = data as DataItem[]
-      //@ts-ignore
-      if (typedData !== 'no data found') {
-        // Filter data based on starting and ending date if filters are provided
-        let filteredData = typedData || ['']
-
+    if (entry.message !== 'no data found') {
+      return entry.map(({ name, monthly_rolling_avg_activity }: any) => {
+        let totalMonthlyRollingAvg
+        // Calculate the total sum of monthly_rolling_avg_activity rates
         if (startingDateFilter || endingDateFilter) {
-          filteredData = typedData?.filter((item) => item?.hours)
+          totalMonthlyRollingAvg = monthly_rolling_avg_activity.reduce(
+            (total: number, item: MonthlyActivity) =>
+              total + item.monthly_rolling_avg_activity,
+            0
+          )
         } else {
-          // If no date filters, use the last month's data
-          filteredData = [typedData[typedData?.length - 1]]
+          totalMonthlyRollingAvg =
+            monthly_rolling_avg_activity[0].monthly_rolling_avg_activity
         }
-        // console.log(filteredData)
-        // Calculate total billed hours based on filtered data
-        const totalBilledHours = filteredData.reduce(
-          (total, item) => total + item.hours,
-          0
-        )
 
-        const modifiedClientName = clientName.replace('Customer Service - ', '')
-        // Apply .toFixed(2) if hours is a decimal number
-        const formattedBilledHours = Number?.isInteger(totalBilledHours)
-          ? totalBilledHours
-          : totalBilledHours?.toFixed(2)
         return {
-          clientName: modifiedClientName,
-          billedhours: formattedBilledHours,
+          agentsName: name === null ? 'No Name' : name,
+          activityAvg:
+            totalMonthlyRollingAvg === null
+              ? 0
+              : totalMonthlyRollingAvg.toFixed(2).replace(/[.,]00$/, ''),
         }
-      }
-      return
-    })
+      })
+    }
+    return
   })
+  console.log(clientData)
+  const agentsName: string[] = []
+  const activityAvg: string[] = []
 
-  const clientNames: string[] = []
-  const billableHrs: number[] = []
-
-  clientData?.forEach((obj) => {
-    //@ts-ignore
-    clientNames.push(obj?.clientName === null ? 'No Name' : obj?.clientName)
-    billableHrs.push(obj?.billedhours as number)
+  clientData?.forEach((obj: any) => {
+    if (obj?.agentsName) {
+      agentsName.push(obj?.agentsName)
+    }
+    if (obj?.activityAvg) {
+      activityAvg.push(obj?.activityAvg)
+    }
   })
 
   return (
+    // <>Rollling AVG</>
     <>
       {clientData?.length === 0 ? (
         <p className=' text-base text-[#69C920]'>No Data Found</p>
@@ -214,9 +213,11 @@ const HoursBilledLastMonth = () => {
                 className='flex gap-16 pl-4 pr-9  '
               >
                 <span>
-                  {value?.clientName === null ? 'No Name' : value?.clientName}
+                  {value?.agentsName === null ? 'No Name' : value?.agentsName}
                 </span>
-                <span className=' ml-auto'>{value?.billedhours}</span>
+                <span className=' ml-auto'>
+                  {value?.activityAvg === null ? 0 : value?.activityAvg}
+                </span>
               </div>
             ))}
             {hasNextPage && (
@@ -232,8 +233,8 @@ const HoursBilledLastMonth = () => {
 
           <div className=' mx-auto max-h-[480px] w-full flex-1 overflow-x-scroll '>
             <MonthlyBilledClientsChart
-              clientName={clientNames}
-              billableHrs={billableHrs}
+              clientName={agentsName}
+              billableHrs={activityAvg}
             />
           </div>
         </div>
@@ -242,4 +243,4 @@ const HoursBilledLastMonth = () => {
   )
 }
 
-export default HoursBilledLastMonth
+export default RollingAvgAgentsActivityReport

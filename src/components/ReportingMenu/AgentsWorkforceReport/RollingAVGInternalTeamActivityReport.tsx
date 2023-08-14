@@ -3,8 +3,9 @@ import { useInfiniteQuery } from '@tanstack/react-query'
 import { useFiltersStore } from '@/store/useFiltersStore'
 import { RotateCw } from 'lucide-react'
 import { useAuthStore } from '@/store/useAuthStore'
-import { RollingAVGInternalTeamActivityChart } from './Charts/RollingAVGInternalTeamActivityChart'
-// import useIntersectionObserver from '@/hooks/useIntersectionObserver'
+// import { RollingAVGInternalTeamActivityChart } from './Charts/RollingAVGInternalTeamActivityChart'
+import useIntersectionObserver from '@/hooks/useIntersectionObserver'
+import { MonthlyBilledClientsChart } from './Charts/MonthlyBilledClientsChart'
 
 interface MonthlyActivity {
   month: string
@@ -85,9 +86,9 @@ const InternalTeamReportAVG = () => {
     data,
     isLoading,
     error,
-    // fetchNextPage,
-    // hasNextPage,
-    // isFetchingNextPage,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
   } = useInfiniteQuery({
     queryKey: [
       'internal-team-report-avg',
@@ -128,10 +129,10 @@ const InternalTeamReportAVG = () => {
       return pages.length + 1
     },
   })
-  // const lastValueRef = useIntersectionObserver<HTMLLIElement>(
-  //   () => void fetchNextPage(),
-  //   [hasNextPage]
-  // )
+  const lastValueRef = useIntersectionObserver<HTMLLIElement>(
+    () => void fetchNextPage(),
+    [hasNextPage]
+  )
 
   if (isLoading)
     return (
@@ -155,45 +156,90 @@ const InternalTeamReportAVG = () => {
   }
 
   // console.log(data?.pages[0].name)
-
+  console.log('TEST DATA', data?.pages)
   const clientData = data?.pages.flatMap((entry) => {
-    return entry.map(({ name, monthly_rolling_avg_activity }: any) => {
-      let totalMonthlyRollingAvg
-      // Calculate the total sum of monthly_rolling_avg_activity rates
-      if (startingDateFilter || endingDateFilter) {
-        totalMonthlyRollingAvg = monthly_rolling_avg_activity.reduce(
-          (total: number, item: MonthlyActivity) =>
-            total + item.monthly_rolling_avg_activity,
-          0
-        )
-      } else {
-        totalMonthlyRollingAvg =
-          monthly_rolling_avg_activity[0].monthly_rolling_avg_activity
-      }
+    if (entry.message !== 'no data found') {
+      return entry.map(({ name, monthly_rolling_avg_activity }: any) => {
+        let totalMonthlyRollingAvg
+        // Calculate the total sum of monthly_rolling_avg_activity rates
+        if (startingDateFilter || endingDateFilter) {
+          totalMonthlyRollingAvg = monthly_rolling_avg_activity.reduce(
+            (total: number, item: MonthlyActivity) =>
+              total + item.monthly_rolling_avg_activity,
+            0
+          )
+        } else {
+          totalMonthlyRollingAvg =
+            monthly_rolling_avg_activity[0].monthly_rolling_avg_activity
+        }
 
-      return {
-        agentsName: name,
-        activityAvg: totalMonthlyRollingAvg,
-      }
-    })
+        return {
+          agentsName: name === null ? 'No Name' : name,
+          activityAvg:
+            totalMonthlyRollingAvg === null
+              ? 0
+              : totalMonthlyRollingAvg.toFixed(2).replace(/[.,]00$/, ''),
+        }
+      })
+    }
+    return
   })
-  console.log(clientData)
+  // console.log(clientData)
   const agentsName: string[] = []
   const activityAvg: string[] = []
 
   clientData?.forEach((obj: any) => {
-    agentsName.push(obj['agentsName'] === null ? 'No Name' : obj['agentsName'])
-    activityAvg.push(
-      obj['activityAvg'] === null ? 0 : obj['activityAvg'].toFixed(2)
-    )
+    if (obj?.agentsName) {
+      agentsName.push(obj?.agentsName)
+    }
+    if (obj?.activityAvg) {
+      activityAvg.push(obj?.activityAvg)
+    }
   })
 
   return (
     // <>Rollling AVG</>
-    <RollingAVGInternalTeamActivityChart
-      agentsName={agentsName}
-      activityAvg={activityAvg}
-    />
+    <>
+      {clientData?.length === 0 ? (
+        <p className=' text-base text-[#69C920]'>No Data Found</p>
+      ) : (
+        <div className='flex divide-x '>
+          <div className='flex max-h-[480px] max-w-[350px] flex-col gap-6 overflow-y-auto pt-4 text-base font-medium'>
+            {clientData?.map((value, index: number) => (
+              <div
+                //@ts-ignore
+                ref={clientData?.length - 2 === index ? lastValueRef : null}
+                key={index}
+                className='flex gap-16 pl-4 pr-9  '
+              >
+                <span>
+                  {value?.agentsName === null ? 'No Name' : value?.agentsName}
+                </span>
+                <span className=' ml-auto'>
+                  {value?.activityAvg === null ? 0 : value?.activityAvg}
+                </span>
+              </div>
+            ))}
+            {hasNextPage && (
+              <p className='text-base text-[#69C920] text-center pb-2 flex justify-center'>
+                {isFetchingNextPage ? (
+                  <RotateCw className='mr-2 h-5 w-5 animate-spin' />
+                ) : (
+                  'No More Data'
+                )}
+              </p>
+            )}
+          </div>
+
+          <div className=' mx-auto max-h-[480px] w-full flex-1 overflow-x-scroll '>
+            <MonthlyBilledClientsChart
+              clientName={agentsName}
+              billableHrs={activityAvg}
+            />
+          </div>
+        </div>
+      )}
+    </>
   )
 }
 

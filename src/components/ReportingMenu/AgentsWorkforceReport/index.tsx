@@ -14,6 +14,9 @@ import InternalTeamReportAVG from './RollingAVGInternalTeamActivityReport'
 import AgentsHighActivityReport from './AgentsHighActivityReport'
 import AgentsLowActivityReport from './AgentsLowActivityReport'
 import InternalTeamActivityRate from './InternalTeamActivityRate'
+import RollingAvgAgentsActivityReport from './RollingAvgAgentsActivityReport'
+import InternalTeamLowActivityReport from './InternalTeamLowActivityReport'
+import InternalTeamHighActivityReport from './InternalTeamHighActivityReport'
 
 const AgentsWorkforceReport = () => {
   const { reportingMenu } = useMenuStore()
@@ -172,9 +175,22 @@ const AgentsWorkforceReport = () => {
             </div>
             <div className=' h-[2px] w-full bg-[#EFEFEF]' />
 
-            <div className=' overflow-x-auto  '>
-              <InternalTeamReportAVG />
+            <InternalTeamReportAVG />
+          </div>
+          {/* Rolling Avg. Agents Activity Report  */}
+          <div className=' mt-10  min-h-[480px] rounded-2xl border text-[#163143]   '>
+            <div className='flex items-center px-4 py-4 '>
+              <h3 className=' text-base font-extrabold'>
+                Rolling Avg. Agents Activity Report
+              </h3>
+              <div className='ml-auto flex items-center gap-3'>
+                <ExpandIcon />
+                <SettingIcon />
+              </div>
             </div>
+            <div className=' h-[2px] w-full bg-[#EFEFEF]' />
+
+            <RollingAvgAgentsActivityReport />
           </div>
           {/* AGENTS ACTIVITY REPORT */}
           <div className='grid  grid-cols-2 gap-10  pt-11'>
@@ -252,6 +268,86 @@ const AgentsWorkforceReport = () => {
               </div>
               <div className=' max-h-[400px] w-full overflow-y-auto '>
                 <AgentsLowActivityReport />
+              </div>
+            </div>
+          </div>
+
+          {/* Internal Team ACTIVITY REPORT */}
+          <div className='grid  grid-cols-2 gap-10  pt-11'>
+            {/* Internal Team High Activity Report */}
+            <div className=' mt-10   min-h-[500px] overflow-y-auto rounded-2xl  border text-[#163143] '>
+              <div className='flex items-center px-4 py-4 '>
+                <h3 className=' text-base font-extrabold'>
+                  High Activity Rate Report (Internal Team)
+                </h3>
+                <div className='ml-auto flex items-center gap-3'>
+                  <ExpandIcon />
+                  <SettingIcon />
+                </div>
+              </div>
+              <div className=' h-[2px] w-full bg-[#EFEFEF]' />
+              <div className='flex   gap-4 py-4'>
+                <div className=' flex items-center gap-4 pl-3'>
+                  <div
+                    style={{
+                      background:
+                        'linear-gradient(90.26deg, #163143 -24.85%, #69C920 80.53%)',
+                    }}
+                    className='h-[8px] w-[21px] '
+                  />
+                  <span className=' font-medium'>High Activity Rate</span>
+                </div>
+                <div className='ml-auto flex items-center gap-4 pr-4 '>
+                  <button className='flex items-center  rounded-full bg-[#F8F9FA] px-[15px] py-[10px] text-[#163143]'>
+                    {' '}
+                    Download
+                  </button>
+                  <button className='flex items-center  rounded-full bg-[#F8F9FA] px-[15px]  py-[10px] text-[#163143]'>
+                    {' '}
+                    Sort <ChevronDownIcon className='ml-2' />
+                  </button>
+                </div>
+              </div>
+              <div className='max-h-[400px]  w-full overflow-y-auto '>
+                <InternalTeamHighActivityReport />
+              </div>
+            </div>
+            {/* Internal Team Low Activity Report */}
+            <div className=' mt-10  min-h-[500px] overflow-y-auto rounded-2xl  border text-[#163143] '>
+              <div className='flex items-center px-4 py-4 '>
+                <h3 className=' text-base font-extrabold'>
+                  Low Activity Rate Report (Internal Team)
+                </h3>
+                <div className='ml-auto flex items-center gap-3'>
+                  <ExpandIcon />
+                  <SettingIcon />
+                </div>
+              </div>
+              <div className=' h-[2px] w-full bg-[#EFEFEF]' />
+              <div className='flex   gap-4 py-4'>
+                <div className=' flex items-center gap-4 pl-3'>
+                  <div
+                    style={{
+                      background:
+                        'linear-gradient(270.46deg, #ff4747 -6.83%, #a03a3a 143.02%)',
+                    }}
+                    className='h-[8px] w-[21px] '
+                  />
+                  <span className=' font-medium'>Low Activity Rate</span>
+                </div>
+                <div className='ml-auto flex items-center gap-4 pr-4 '>
+                  <button className='flex items-center  rounded-full bg-[#F8F9FA] px-[15px] py-[10px] text-[#163143]'>
+                    {' '}
+                    Download
+                  </button>
+                  <button className='flex items-center  rounded-full bg-[#F8F9FA] px-[15px]  py-[10px] text-[#163143]'>
+                    {' '}
+                    Sort <ChevronDownIcon className='ml-2' />
+                  </button>
+                </div>
+              </div>
+              <div className=' max-h-[400px] w-full overflow-y-auto '>
+                <InternalTeamLowActivityReport />
               </div>
             </div>
           </div>
