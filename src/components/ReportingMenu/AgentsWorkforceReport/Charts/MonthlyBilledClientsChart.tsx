@@ -32,7 +32,7 @@ export function MonthlyBilledClientsChart({ clientName, billableHrs }: any) {
   const [chartData, setChartData] = useState<ChartData<'bar'>>({
     datasets: [],
   })
-  // console.log('Client inside chart', clientName)
+  //
   useEffect(() => {
     const chart = chartRef.current
 
@@ -94,7 +94,6 @@ export function MonthlyBilledClientsChart({ clientName, billableHrs }: any) {
       // },
     },
   }
-  console.log('CLIENT NAMES Length', clientName.length)
 
   return (
     <div

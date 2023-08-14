@@ -55,13 +55,12 @@ const getClienWithAgentsCount = async (
       }
     )
     const data = await res.json()
-    console.log('Clients With Gents', data)
+
     if (res.status === 401) {
       return { message: 'Not authenticated' }
     }
     return data
   } catch (error: any) {
-    console.log(error.message)
     return { message: 'Internal Server Error' }
   }
 }
@@ -109,17 +108,13 @@ const ClientsWithAgents = () => {
         Number(pageParam)
       ),
     getNextPageParam: (lastPage, pages) => {
-      console.log('LAST PAGE', lastPage)
       if (lastPage.message === 'no data found') {
-        console.log('No Data Found')
         return undefined
       }
       if (lastPage.message === 'Not authenticated') {
-        console.log('User Not Authorized ')
         return undefined
       }
       if (lastPage.message) {
-        console.log(lastPage.message)
         return undefined
       }
       return pages.length + 1
@@ -143,8 +138,8 @@ const ClientsWithAgents = () => {
       </p>
     )
   if (error) return <p className=' text-base text-[#69C920]'>Error</p>
-  //   console.log(data)
-  //   console.log(hasNextPage)
+  //
+  //
 
   if (data?.pages[0].message) {
     if (data?.pages[0].message === 'Not authenticated')
@@ -165,7 +160,7 @@ const ClientsWithAgents = () => {
   //     )
   //   }
   //   const lastPage = data?.pages[data.pages.length - 1]
-  //   console.log('LAST PAGE VALUE', lastPage)
+  //
   //   const agentsToDisplay = lastPage.slice(0, -1)
   return (
     <>

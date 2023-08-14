@@ -30,7 +30,7 @@ const LoginForm = () => {
   const onSubmit = async (values: z.infer<typeof loginFormSchema>) => {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
-    console.log(values)
+
     setloading(true)
 
     const formData = new URLSearchParams()
@@ -46,7 +46,7 @@ const LoginForm = () => {
       setAccesstoken(data.access_token)
       navigate(state.from ? state.from : '/')
     }
-    console.log(data)
+
     if (data.detail) {
       toast.error(data.detail)
       setloading(false)

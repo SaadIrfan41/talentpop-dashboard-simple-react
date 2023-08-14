@@ -51,13 +51,12 @@ const getTotalActiveAgents = async (
       }
     )
     const agents_count = await res.json()
-    console.log(agents_count)
+
     if (res.status === 401) {
       return { message: 'Not authenticated' }
     }
     return agents_count
   } catch (error: any) {
-    console.log(error.message)
     return { message: 'Internal Server Error' }
   }
 }

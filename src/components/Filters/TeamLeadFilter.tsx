@@ -82,7 +82,7 @@ const TeamLeadsNameFilter = () => {
 
   const handleNameCheckboxChange = (event: any, name: any) => {
     const isChecked = event.target.checked
-    console.log(name, isChecked)
+
     if (isChecked) {
       //@ts-ignore
       setSelectedNames([...selectedNames, name])
@@ -104,7 +104,7 @@ const TeamLeadsNameFilter = () => {
     return filteredData.map((item: any, index: any) => {
       const name =
         item['team_lead_name'] === null ? 'No Name' : item['team_lead_name']
-      // console.log("NAME",name);
+      //
       let firstChar
       //   firstChar = name[0]?.toUpperCase();
       const match = name?.match(/[A-Za-z]/)

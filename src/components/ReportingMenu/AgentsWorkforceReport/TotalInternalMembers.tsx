@@ -58,7 +58,6 @@ const getTotalInternalMembers = async (
     }
     return data
   } catch (error: any) {
-    console.log(error.message)
     return { message: 'Internal Server Error' }
   }
 }
@@ -125,7 +124,6 @@ const TotalInternalMembers = () => {
   //     </p>
   //   )
   // }
-  console.log(data)
 
   return (
     <>

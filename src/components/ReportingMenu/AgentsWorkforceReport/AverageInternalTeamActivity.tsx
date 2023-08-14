@@ -57,7 +57,6 @@ const getAverageInternalTeamActivity = async (
     }
     return data
   } catch (error: any) {
-    console.log(error.message)
     return { message: 'Internal Server Error' }
   }
 }

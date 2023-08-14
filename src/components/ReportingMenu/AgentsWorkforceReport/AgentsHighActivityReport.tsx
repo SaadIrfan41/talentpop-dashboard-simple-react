@@ -53,13 +53,12 @@ const getAgentHighActivityReport = async (
       }
     )
     const data = await res.json()
-    console.log('High activity fetch', data)
+
     if (res.status === 401) {
       return { message: 'Not authenticated' }
     }
     return data
   } catch (error: any) {
-    console.log(error.message)
     return { message: 'Internal Server Error' }
   }
 }

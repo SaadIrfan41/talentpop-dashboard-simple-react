@@ -20,7 +20,6 @@ import InternalTeamHighActivityReport from './InternalTeamHighActivityReport'
 
 const AgentsWorkforceReport = () => {
   const { reportingMenu } = useMenuStore()
-  console.log(reportingMenu)
 
   return (
     <>

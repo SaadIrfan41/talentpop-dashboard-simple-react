@@ -87,7 +87,7 @@ const CSMNameFilter = () => {
 
   const handleNameCheckboxChange = (event: any, name: any) => {
     const isChecked = event.target.checked
-    console.log(name, isChecked)
+
     if (isChecked) {
       //@ts-ignore
       setSelectedNames([...selectedNames, name])
@@ -111,7 +111,7 @@ const CSMNameFilter = () => {
         item['customer_success_manager_name'] === null
           ? 'No Name'
           : item['customer_success_manager_name']
-      // console.log("NAME",name);
+      //
       let firstChar
       //   firstChar = name[0]?.toUpperCase();
       const match = name?.match(/[A-Za-z]/)
@@ -191,7 +191,7 @@ const CSMNameFilter = () => {
       )
     return <p className=' text-base text-[#69C920]'>{data.message}</p>
   }
-  //   console.log(filteredData);
+  //
   return (
     <div ref={animateRef} style={{ zIndex: 10 }}>
       <button

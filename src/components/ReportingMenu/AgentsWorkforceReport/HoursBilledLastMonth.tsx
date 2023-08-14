@@ -66,7 +66,6 @@ const getHoursBilledLastMonth = async (
     }
     return data
   } catch (error: any) {
-    console.log(error.message)
     return { message: 'Internal Server Error' }
   }
 }
@@ -113,17 +112,17 @@ const HoursBilledLastMonth = () => {
         Number(pageParam)
       ),
     getNextPageParam: (lastPage, pages) => {
-      // console.log('LAST PAGE', lastPage)
+      //
       if (lastPage.message === 'no data found') {
-        // console.log('No Data Found')
+        //
         return undefined
       }
       if (lastPage.message === 'Not authenticated') {
-        // console.log('User Not Authorized ')
+        //
         return undefined
       }
       if (lastPage.message) {
-        // console.log(lastPage.message)
+        //
         return undefined
       }
       return pages.length + 1
@@ -154,7 +153,7 @@ const HoursBilledLastMonth = () => {
       </p>
     )
   }
-  // console.log('TEST DATA', data?.pages)
+  //
   const clientData = data?.pages.flatMap((entry) => {
     return Object.entries(entry).map(([clientName, data]) => {
       const typedData: DataItem[] = data as DataItem[]
@@ -169,7 +168,7 @@ const HoursBilledLastMonth = () => {
           // If no date filters, use the last month's data
           filteredData = [typedData[typedData?.length - 1]]
         }
-        // console.log(filteredData)
+        //
         // Calculate total billed hours based on filtered data
         const totalBilledHours = filteredData.reduce(
           (total, item) => total + item.hours,
@@ -180,10 +179,11 @@ const HoursBilledLastMonth = () => {
         // Apply .toFixed(2) if hours is a decimal number
         const formattedBilledHours = Number?.isInteger(totalBilledHours)
           ? totalBilledHours
-          : totalBilledHours?.toFixed(2)
+          : totalBilledHours?.toFixed(2).replace(/[.,]00$/, '')
         return {
-          clientName: modifiedClientName,
-          billedhours: formattedBilledHours,
+          clientName:
+            modifiedClientName === null ? 'No Name' : modifiedClientName,
+          billedhours: formattedBilledHours === null ? 0 : formattedBilledHours,
         }
       }
       return
@@ -194,9 +194,12 @@ const HoursBilledLastMonth = () => {
   const billableHrs: number[] = []
 
   clientData?.forEach((obj) => {
-    //@ts-ignore
-    clientNames.push(obj?.clientName === null ? 'No Name' : obj?.clientName)
-    billableHrs.push(obj?.billedhours as number)
+    if (obj?.clientName) {
+      clientNames.push(obj?.clientName)
+    }
+    if (obj?.billedhours) {
+      billableHrs.push(obj?.billedhours as number)
+    }
   })
 
   return (

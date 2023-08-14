@@ -101,7 +101,7 @@ const ClientsNameFilter = () => {
     return filteredData.map((item: any, index: any) => {
       const name =
         item['projects.name'] === null ? 'No Name' : item['projects.name']
-      // console.log("NAME",name);
+      //
       let firstChar
       firstChar = name?.charAt(name?.indexOf('-') + 2)?.toUpperCase()
 

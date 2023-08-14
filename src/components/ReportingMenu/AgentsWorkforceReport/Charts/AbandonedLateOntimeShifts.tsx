@@ -60,7 +60,6 @@ const getAbandonedLateOntimeShifts = async (
     }
     return data
   } catch (error: any) {
-    console.log(error.message)
     return { message: 'Internal Server Error' }
   }
 }
@@ -133,7 +132,6 @@ const AbandonedLateOntimeShifts = () => {
   ]
   const dataAvaliable = !areAllZeros(values)
 
-  console.log('Dougnut Data', dataAvaliable)
   const Chartdata = {
     labels: ['Late', 'Abandoned', 'Missed', 'Ontime'],
     datasets: [

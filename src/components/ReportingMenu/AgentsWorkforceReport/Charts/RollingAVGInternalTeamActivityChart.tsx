@@ -88,7 +88,7 @@ export function RollingAVGInternalTeamActivityChart({
 
     setChartData(chartData)
   }, [activityAvg, agentsName])
-  console.log('AGENTS LENGTH', agentsName.length)
+
   return (
     <div
       style={{

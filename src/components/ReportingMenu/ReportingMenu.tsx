@@ -7,7 +7,7 @@ import GlobalPerformance from './GlobalPerformance'
 
 const ReportingMenu = () => {
   const { changeReportingMenu, reportingMenu } = useMenuStore()
-  // console.log(reportingMenu);
+  //
 
   return (
     <section className='   '>
