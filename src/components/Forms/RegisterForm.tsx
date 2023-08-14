@@ -25,6 +25,7 @@ const RegisterForm = () => {
   })
 
   function onSubmit(values: z.infer<typeof registerFormSchema>) {
+    console.log(values)
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
   }

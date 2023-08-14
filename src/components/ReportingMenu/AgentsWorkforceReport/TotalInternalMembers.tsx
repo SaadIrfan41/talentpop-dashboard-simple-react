@@ -106,6 +106,7 @@ const TotalInternalMembers = () => {
       </p>
     )
   if (error) return <p className=' text-base text-[#69C920]'>Error</p>
+  console.log(data)
   // if (data.message) {
   //   if (data.message === 'Not authenticated')
   //     return (
