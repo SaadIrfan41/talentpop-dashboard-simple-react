@@ -10,10 +10,8 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { useReportingMenuStore } from '@/store/useReportingMenuStore'
-import { useState } from 'react'
 
 export function HighActivityReportOptionButton() {
-  const [position, setPosition] = useState('bottom')
   const {
     set_High_Activity_Report_Setting_Option,
     High_Activity_Report_Setting_Option,
@@ -32,13 +30,10 @@ export function HighActivityReportOptionButton() {
       <DropdownMenuContent className='w-56'>
         <DropdownMenuLabel>Select Options</DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuRadioGroup value={position} onValueChange={setPosition}>
+        <DropdownMenuRadioGroup value={High_Activity_Report_Setting_Option}>
           <DropdownMenuRadioItem
             onClick={() =>
               set_High_Activity_Report_Setting_Option('internal_team')
-            }
-            defaultChecked={
-              High_Activity_Report_Setting_Option === 'internal_team'
             }
             value='internal_team'
           >

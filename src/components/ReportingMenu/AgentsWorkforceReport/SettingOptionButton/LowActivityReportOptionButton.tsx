@@ -16,10 +16,10 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { useReportingMenuStore } from '@/store/useReportingMenuStore'
-import { useState } from 'react'
+// import { useState } from 'react'
 
 export function LowActivityReportOptionButton() {
-  const [position, setPosition] = useState('bottom')
+  // const [position, setPosition] = useState('bottom')
   const {
     set_Low_Activity_Report_Setting_Option,
     Low_Activity_Report_Setting_Option,
@@ -38,13 +38,13 @@ export function LowActivityReportOptionButton() {
       <DropdownMenuContent className='w-56'>
         <DropdownMenuLabel>Select Options</DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuRadioGroup value={position} onValueChange={setPosition}>
+        <DropdownMenuRadioGroup
+          value={Low_Activity_Report_Setting_Option}
+          // onValueChange={setPosition}
+        >
           <DropdownMenuRadioItem
             onClick={() =>
               set_Low_Activity_Report_Setting_Option('internal_team')
-            }
-            defaultChecked={
-              Low_Activity_Report_Setting_Option === 'internal_team'
             }
             value='internal_team'
           >

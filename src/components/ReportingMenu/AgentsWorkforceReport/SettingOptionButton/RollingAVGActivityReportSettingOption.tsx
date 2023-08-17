@@ -16,10 +16,8 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { useReportingMenuStore } from '@/store/useReportingMenuStore'
-import { useState } from 'react'
 
 export function RollingAVGActivityReportOptionButton() {
-  const [position, setPosition] = useState('bottom')
   const {
     set_Rolling_AVG_Activity_Report_Setting_Option,
     Rolling_AVG_Activity_Report_Setting_Option,
@@ -38,13 +36,13 @@ export function RollingAVGActivityReportOptionButton() {
       <DropdownMenuContent className='w-56'>
         <DropdownMenuLabel>Select Options</DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuRadioGroup value={position} onValueChange={setPosition}>
+        <DropdownMenuRadioGroup
+          value={Rolling_AVG_Activity_Report_Setting_Option}
+          // onValueChange={setPosition}
+        >
           <DropdownMenuRadioItem
             onClick={() =>
               set_Rolling_AVG_Activity_Report_Setting_Option('internal_team')
-            }
-            defaultChecked={
-              Rolling_AVG_Activity_Report_Setting_Option === 'internal_team'
             }
             value='internal_team'
           >

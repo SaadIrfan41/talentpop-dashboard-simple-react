@@ -16,10 +16,8 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { useReportingMenuStore } from '@/store/useReportingMenuStore'
-import { useState } from 'react'
 
 export function AbandonedLateOntimeShiftsButton() {
-  const [position, setPosition] = useState('bottom')
   const {
     set_Abandoned_Late_Ontime_Shift_Setting_Option,
     Abandoned_Late_Ontime_Shift_Setting_Option,
@@ -39,25 +37,18 @@ export function AbandonedLateOntimeShiftsButton() {
         <DropdownMenuLabel>Select Options</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuRadioGroup
-          value={position}
-          // defaultChecked={Abandoned_Late_Ontime_Shift_Setting_Option}
-          onValueChange={setPosition}
+          value={Abandoned_Late_Ontime_Shift_Setting_Option}
+          // onValueChange={setPosition}
         >
           <DropdownMenuRadioItem
             onClick={() =>
               set_Abandoned_Late_Ontime_Shift_Setting_Option('count')
-            }
-            defaultChecked={
-              Abandoned_Late_Ontime_Shift_Setting_Option === 'count'
             }
             value='count'
           >
             By Count
           </DropdownMenuRadioItem>
           <DropdownMenuRadioItem
-            defaultChecked={
-              Abandoned_Late_Ontime_Shift_Setting_Option === 'percentage'
-            }
             onClick={() =>
               set_Abandoned_Late_Ontime_Shift_Setting_Option('percentage')
             }
