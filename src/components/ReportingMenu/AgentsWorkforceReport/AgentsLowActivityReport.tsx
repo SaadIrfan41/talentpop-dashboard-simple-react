@@ -135,7 +135,51 @@ const AgentsLowActivityReport = () => {
   })
 
   return (
-    <AgentsLowActivityChart agentsName={agentsName} activityAvg={activityAvg} />
+    <div>
+      {data?.length === 0 ? (
+        <p className=' text-base text-[#69C920]'>No Data Found</p>
+      ) : (
+        <div className='flex divide-x '>
+          <div className='flex max-h-[480px] max-w-[350px] flex-col gap-6 overflow-y-auto pt-4 text-base font-medium'>
+            {data?.map((value: any, index: number) => (
+              <div
+                //@ts-ignore
+                // ref={clientData?.length - 2 === index ? lastValueRef : null}
+                key={index}
+                className='flex gap-16 pl-4 pr-9  '
+              >
+                <span>
+                  {value['members.users.name'] === null
+                    ? 'No Name'
+                    : value['members.users.name']}
+                </span>
+                <span className=' ml-auto'>
+                  {value['avg_activity'] === null
+                    ? 0
+                    : value['avg_activity'].toFixed(2).replace(/[.,]00$/, '')}
+                </span>
+              </div>
+            ))}
+            {/* {hasNextPage && (
+              <p className='text-base text-[#69C920] text-center pb-2 flex justify-center'>
+                {isFetchingNextPage ? (
+                  <RotateCw className='mr-2 h-5 w-5 animate-spin' />
+                ) : (
+                  'No More Data'
+                )}
+              </p>
+            )} */}
+          </div>
+
+          <div className=' mx-auto max-h-[480px] w-full flex-1 overflow-x-scroll '>
+            <AgentsLowActivityChart
+              agentsName={agentsName}
+              activityAvg={activityAvg}
+            />
+          </div>
+        </div>
+      )}
+    </div>
   )
 }
 

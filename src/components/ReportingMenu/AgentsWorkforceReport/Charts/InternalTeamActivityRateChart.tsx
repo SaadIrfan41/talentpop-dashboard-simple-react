@@ -66,7 +66,7 @@ export function InternalTeamActivityRateChart({ monthlyAvgActivities }: any) {
       return monthName === month
     })
 
-    return activity ? activity.avg_activity : 0
+    return activity ? activity.avg_activity?.toFixed(2) : 0
   })
   // const dateString = '2023-06'
   // const fullDateString = dateString + '-01T00:00:00+00:00'

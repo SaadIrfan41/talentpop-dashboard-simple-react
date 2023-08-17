@@ -116,7 +116,7 @@ const HighActivityReportInternalTeam = () => {
     <>
       {data[0]?.percentage_above_70 === null
         ? 0
-        : data[0]?.percentage_above_70?.toFixed(2) || 0}
+        : data[0]?.percentage_above_70?.toFixed(2).replace(/[.,]00$/, '') || 0}
 
       {/* <StatsPositiveIcon /> */}
     </>

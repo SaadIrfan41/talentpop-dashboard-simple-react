@@ -115,7 +115,7 @@ const LowActivityReportInternalTeam = () => {
     <>
       {data[0]?.percentage_below_30 === null
         ? 0
-        : data[0]?.percentage_below_30?.toFixed(2) || 0}
+        : data[0]?.percentage_below_30?.toFixed(2).replace(/[.,]00$/, '') || 0}
 
       {/* <StatsPositiveIcon /> */}
     </>

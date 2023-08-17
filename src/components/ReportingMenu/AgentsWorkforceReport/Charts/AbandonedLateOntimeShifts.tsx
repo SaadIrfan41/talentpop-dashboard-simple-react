@@ -164,7 +164,7 @@ const AbandonedLateOntimeShifts = () => {
       },
     ],
   }
-  console.log(Chartdata)
+  // console.log(Chartdata)
 
   return dataAvaliable ? (
     <Doughnut

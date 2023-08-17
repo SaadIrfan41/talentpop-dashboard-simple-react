@@ -3,16 +3,10 @@ import { useInfiniteQuery } from '@tanstack/react-query'
 import { useFiltersStore } from '@/store/useFiltersStore'
 import { RotateCw } from 'lucide-react'
 import { useAuthStore } from '@/store/useAuthStore'
-// import { RollingAVGInternalTeamActivityChart } from './Charts/RollingAVGInternalTeamActivityChart'
-import useIntersectionObserver from '@/hooks/useIntersectionObserver'
 import { BarChart } from './Charts/BarChart'
+import useIntersectionObserver from '@/hooks/useIntersectionObserver'
 
-interface MonthlyActivity {
-  month: string
-  monthly_rolling_avg_activity: number
-}
-
-const getInterTeamReportAVG = async (
+const getAcceptableAgentsActivityReport = async (
   filterClientName: string[],
   filterAgentsName: string[],
   filterTeamLeadsName: string[],
@@ -52,7 +46,7 @@ const getInterTeamReportAVG = async (
 
   try {
     const res = await fetch(
-      `http://18.237.25.116:8000/rolling-average-internal-team-activity-report?${clientQueryParam}&${agentsQueryParam}&${teamLeadQueryParam}&${OM_QueryParam}&${CSM_QueryParam}&startdate=${startingDateFilter}&enddate=${endingDateFilter}&page=${pageParam}`,
+      `http://18.237.25.116:8000/acceptable-activity-rate-report-agents?${clientQueryParam}&${agentsQueryParam}&${teamLeadQueryParam}&${OM_QueryParam}&${CSM_QueryParam}&startdate=${startingDateFilter}&enddate=${endingDateFilter}&page=${pageParam}`,
       {
         headers: {
           accept: 'application/json',
@@ -61,6 +55,7 @@ const getInterTeamReportAVG = async (
       }
     )
     const data = await res.json()
+
     if (res.status === 401) {
       return { message: 'Not authenticated' }
     }
@@ -69,7 +64,7 @@ const getInterTeamReportAVG = async (
     return { message: 'Internal Server Error' }
   }
 }
-const InternalTeamReportAVG = () => {
+const AcceptableAgentsActivityReport = () => {
   const {
     filterClientName,
     filterAgentsName,
@@ -90,7 +85,7 @@ const InternalTeamReportAVG = () => {
     isFetchingNextPage,
   } = useInfiniteQuery({
     queryKey: [
-      'internal-team-report-avg',
+      'acceptable-activity-rate-report-agents',
       filterClientName,
       filterAgentsName,
       filterTeamLeadsName,
@@ -100,7 +95,7 @@ const InternalTeamReportAVG = () => {
       endingDateFilter,
     ],
     queryFn: ({ pageParam = 1 }) =>
-      getInterTeamReportAVG(
+      getAcceptableAgentsActivityReport(
         filterClientName,
         filterAgentsName,
         filterTeamLeadsName,
@@ -128,11 +123,11 @@ const InternalTeamReportAVG = () => {
       return pages.length + 1
     },
   })
+
   const lastValueRef = useIntersectionObserver<HTMLLIElement>(
     () => void fetchNextPage(),
     [hasNextPage]
   )
-
   if (isLoading)
     return (
       <p className=' grid h-[400px] w-full place-items-center  text-center text-3xl  font-bold  capitalize text-[#69C920]'>
@@ -153,61 +148,42 @@ const InternalTeamReportAVG = () => {
       </p>
     )
   }
-
-  //
-
+  // console.log('DATA', data)
   const clientData = data?.pages.flatMap((entry) => {
     if (entry.message !== 'no data found') {
-      return entry.map(({ name, monthly_rolling_avg_activity }: any) => {
-        let totalMonthlyRollingAvg
-        // Calculate the total sum of monthly_rolling_avg_activity rates
-        if (startingDateFilter || endingDateFilter) {
-          totalMonthlyRollingAvg = monthly_rolling_avg_activity.reduce(
-            (total: number, item: MonthlyActivity) =>
-              total + item.monthly_rolling_avg_activity,
-            0
-          )
-        } else {
-          totalMonthlyRollingAvg =
-            monthly_rolling_avg_activity[0].monthly_rolling_avg_activity
-        }
-
+      return entry.map((obj: any) => {
         return {
-          internalteamNames: name === null ? 'No Name' : name,
+          agentsName:
+            obj['members.users.name'] === null
+              ? 'No Name'
+              : obj['members.users.name'],
           activityAvg:
-            totalMonthlyRollingAvg === null
+            obj['avg_activity'] === null
               ? 0
-              : Number(
-                  totalMonthlyRollingAvg.toFixed(2).replace(/[.,]00$/, '')
-                ),
+              : Number(obj['avg_activity'].toFixed(2).replace(/[.,]00$/, '')),
         }
       })
     }
     return
   })
-  //
-  // console.log(clientData)
-  const internalteamNames: string[] = []
-  const activityAvg: number[] = []
+
+  const agentsName: string[] = []
+  const activityAvg: string[] = []
 
   clientData?.forEach((obj: any) => {
-    if (obj?.internalteamNames) {
-      internalteamNames.push(obj?.internalteamNames)
-    }
-    if (obj?.activityAvg) {
-      activityAvg.push(obj?.activityAvg)
-    }
+    agentsName.push(obj.agentsName === null ? 'No Name' : obj.agentsName)
+    activityAvg.push(obj.activityAvg)
   })
-  // console.log('ClientData', activityAvg)
 
+  // console.log('ClientData22', clientData)
   return (
-    <>
+    <div>
       {clientData?.length === 0 ? (
         <p className=' text-base text-[#69C920]'>No Data Found</p>
       ) : (
         <div className='flex divide-x '>
           <div className='flex max-h-[480px] max-w-[350px] flex-col gap-6 overflow-y-auto pt-4 text-base font-medium'>
-            {clientData?.map((value, index: number) => (
+            {clientData?.map((value: any, index: number) => (
               <div
                 //@ts-ignore
                 ref={clientData?.length - 2 === index ? lastValueRef : null}
@@ -215,12 +191,10 @@ const InternalTeamReportAVG = () => {
                 className='flex gap-16 pl-4 pr-9  '
               >
                 <span>
-                  {value?.internalteamNames === null
-                    ? 'No Name'
-                    : value?.internalteamNames}
+                  {value.agentsName === null ? 'No Name' : value.agentsName}
                 </span>
                 <span className=' ml-auto'>
-                  {value?.activityAvg === null ? 0 : value?.activityAvg}
+                  {value.activityAvg === null ? 0 : value.activityAvg}
                 </span>
               </div>
             ))}
@@ -236,12 +210,12 @@ const InternalTeamReportAVG = () => {
           </div>
 
           <div className=' mx-auto max-h-[480px] w-full flex-1 overflow-x-scroll '>
-            <BarChart names={internalteamNames} values={activityAvg} />
+            <BarChart names={agentsName} values={activityAvg} />
           </div>
         </div>
       )}
-    </>
+    </div>
   )
 }
 
-export default InternalTeamReportAVG
+export default AcceptableAgentsActivityReport

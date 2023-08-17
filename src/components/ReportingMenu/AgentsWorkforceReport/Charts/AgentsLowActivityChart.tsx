@@ -34,16 +34,22 @@ export function AgentsLowActivityChart({ agentsName, activityAvg }: any) {
   })
 
   const options = {
-    indexAxis: 'y' as const,
+    // indexAxis: 'x' as const,
+    // barThickness: names.length < 200 ? 50 : 10,
+    barThickness: agentsName.length < 30 ? 30 : 10,
+
     maintainAspectRatio: false,
     elements: {
       bar: {
         borderWidth: 2,
       },
     },
-    barThickness: 12,
     scales: {
       x: {
+        display: false,
+      },
+
+      y: {
         type: 'logarithmic',
       },
     },
@@ -51,6 +57,10 @@ export function AgentsLowActivityChart({ agentsName, activityAvg }: any) {
       legend: {
         display: false,
       },
+      // title: {
+      //   display: true,
+      //   text: 'Chart.js Horizontal Bar Chart',
+      // },
     },
   }
 
@@ -82,9 +92,11 @@ export function AgentsLowActivityChart({ agentsName, activityAvg }: any) {
 
   return (
     <div
+      // style={{ width: names.length * 20 }}
       style={{
-        height: agentsName.length < 20 ? '100%' : agentsName.length * 20,
+        width: agentsName.length < 50 ? '100%' : agentsName.length * 15,
       }}
+      className='mx-auto h-[450px]  '
     >
       <Chart
         ref={chartRef}
@@ -92,7 +104,9 @@ export function AgentsLowActivityChart({ agentsName, activityAvg }: any) {
         options={options}
         type='bar'
         data={chartData}
-        className={`   w-full `}
+        // width={names.length * 20}
+        height={'100%'}
+        className={` `}
       />
     </div>
   )
