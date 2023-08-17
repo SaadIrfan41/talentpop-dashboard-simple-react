@@ -1,11 +1,10 @@
-'use client'
 import { useQuery } from '@tanstack/react-query'
 import { useFiltersStore } from '@/store/useFiltersStore'
 import { RotateCw } from 'lucide-react'
-// import { StatsNegativeIcon } from '@/components/Icons'
 import { useAuthStore } from '@/store/useAuthStore'
+// import { StatsPositiveIcon } from '@/components/Icons'
 
-const getTotalInternalTeamMembers = async (
+const getHighActivityReportInternalTeam = async (
   filterClientName: string[],
   filterAgentsName: string[],
   filterTeamLeadsName: string[],
@@ -44,7 +43,8 @@ const getTotalInternalTeamMembers = async (
 
   try {
     const res = await fetch(
-      `http://18.237.25.116:8000/total-internal-members?${clientQueryParam}&${agentsQueryParam}&${teamLeadQueryParam}&${OM_QueryParam}&${CSM_QueryParam}&startdate=${startingDateFilter}&enddate=${endingDateFilter}`,
+      `http://18.237.25.116:8000/high-activity-rate-report-internal-team-percentage
+?${clientQueryParam}&${agentsQueryParam}&${teamLeadQueryParam}&${OM_QueryParam}&${CSM_QueryParam}&startdate=${startingDateFilter}&enddate=${endingDateFilter}`,
       {
         headers: {
           accept: 'application/json',
@@ -52,16 +52,16 @@ const getTotalInternalTeamMembers = async (
         },
       }
     )
-    const team_member__count = await res.json()
+    const data = await res.json()
     if (res.status === 401) {
       return { message: 'Not authenticated' }
     }
-    return team_member__count
+    return data
   } catch (error: any) {
     return { message: 'Internal Server Error' }
   }
 }
-const TotalInternalTeamMembers = () => {
+const HighActivityReportInternalTeam = () => {
   const {
     filterClientName,
     filterAgentsName,
@@ -75,17 +75,17 @@ const TotalInternalTeamMembers = () => {
 
   const { data, isLoading, error } = useQuery({
     queryKey: [
-      'total-internal-team-members',
-      // filterClientName,
-      // filterAgentsName,
-      // filterTeamLeadsName,
-      // filterOMsName,
-      // filterCSMsName,
+      'high-activity-rate-report-internal-team-percentage',
+      filterClientName,
+      filterAgentsName,
+      filterTeamLeadsName,
+      filterOMsName,
+      filterCSMsName,
       startingDateFilter,
       endingDateFilter,
     ],
     queryFn: () =>
-      getTotalInternalTeamMembers(
+      getHighActivityReportInternalTeam(
         filterClientName,
         filterAgentsName,
         filterTeamLeadsName,
@@ -114,11 +114,13 @@ const TotalInternalTeamMembers = () => {
   }
   return (
     <>
-      {data.data[0]?.total_users}
+      {data[0]?.percentage_above_70 === null
+        ? 0
+        : data[0]?.percentage_above_70?.toFixed(2) || 0}
 
-      {/* <StatsNegativeIcon /> */}
+      {/* <StatsPositiveIcon /> */}
     </>
   )
 }
 
-export default TotalInternalTeamMembers
+export default HighActivityReportInternalTeam

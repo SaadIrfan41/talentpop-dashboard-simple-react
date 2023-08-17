@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
 import { useFiltersStore } from '@/store/useFiltersStore'
 import { RotateCw } from 'lucide-react'
-import { StatsPositiveIcon } from '@/components/Icons'
+// import { StatsPositiveIcon } from '@/components/Icons'
 import { useAuthStore } from '@/store/useAuthStore'
 const getTotalActiveAgents = async (
   filterClientName: string[],
@@ -124,7 +124,7 @@ const TotalActiveAgents = () => {
   return (
     <>
       {data?.data[0]?.total_users || 0}
-      <StatsPositiveIcon />
+      {/* <StatsPositiveIcon /> */}
     </>
   )
 }

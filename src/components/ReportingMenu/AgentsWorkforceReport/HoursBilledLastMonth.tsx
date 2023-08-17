@@ -3,7 +3,7 @@ import { useInfiniteQuery } from '@tanstack/react-query'
 import { useFiltersStore } from '@/store/useFiltersStore'
 import { RotateCw } from 'lucide-react'
 import { useAuthStore } from '@/store/useAuthStore'
-import { MonthlyBilledClientsChart } from './Charts/MonthlyBilledClientsChart'
+import { BarChart } from './Charts/BarChart'
 import useIntersectionObserver from '@/hooks/useIntersectionObserver'
 
 interface DataItem {
@@ -234,10 +234,7 @@ const HoursBilledLastMonth = () => {
           </div>
 
           <div className=' mx-auto max-h-[480px] w-full flex-1 overflow-x-scroll '>
-            <MonthlyBilledClientsChart
-              clientName={clientNames}
-              billableHrs={billableHrs}
-            />
+            <BarChart names={clientNames} values={billableHrs} />
           </div>
         </div>
       )}

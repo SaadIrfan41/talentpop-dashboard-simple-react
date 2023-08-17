@@ -5,7 +5,7 @@ import { RotateCw } from 'lucide-react'
 import { useAuthStore } from '@/store/useAuthStore'
 // import { RollingAVGInternalTeamActivityChart } from './Charts/RollingAVGInternalTeamActivityChart'
 import useIntersectionObserver from '@/hooks/useIntersectionObserver'
-import { MonthlyBilledClientsChart } from './Charts/MonthlyBilledClientsChart'
+import { BarChart } from './Charts/BarChart'
 
 interface MonthlyActivity {
   month: string
@@ -173,31 +173,34 @@ const InternalTeamReportAVG = () => {
         }
 
         return {
-          agentsName: name === null ? 'No Name' : name,
+          internalteamNames: name === null ? 'No Name' : name,
           activityAvg:
             totalMonthlyRollingAvg === null
               ? 0
-              : totalMonthlyRollingAvg.toFixed(2).replace(/[.,]00$/, ''),
+              : Number(
+                  totalMonthlyRollingAvg.toFixed(2).replace(/[.,]00$/, '')
+                ),
         }
       })
     }
     return
   })
   //
-  const agentsName: string[] = []
-  const activityAvg: string[] = []
+  // console.log(clientData)
+  const internalteamNames: string[] = []
+  const activityAvg: number[] = []
 
   clientData?.forEach((obj: any) => {
-    if (obj?.agentsName) {
-      agentsName.push(obj?.agentsName)
+    if (obj?.internalteamNames) {
+      internalteamNames.push(obj?.internalteamNames)
     }
     if (obj?.activityAvg) {
       activityAvg.push(obj?.activityAvg)
     }
   })
+  console.log('ClientData', activityAvg)
 
   return (
-    // <>Rollling AVG</>
     <>
       {clientData?.length === 0 ? (
         <p className=' text-base text-[#69C920]'>No Data Found</p>
@@ -212,7 +215,9 @@ const InternalTeamReportAVG = () => {
                 className='flex gap-16 pl-4 pr-9  '
               >
                 <span>
-                  {value?.agentsName === null ? 'No Name' : value?.agentsName}
+                  {value?.internalteamNames === null
+                    ? 'No Name'
+                    : value?.internalteamNames}
                 </span>
                 <span className=' ml-auto'>
                   {value?.activityAvg === null ? 0 : value?.activityAvg}
@@ -231,10 +236,7 @@ const InternalTeamReportAVG = () => {
           </div>
 
           <div className=' mx-auto max-h-[480px] w-full flex-1 overflow-x-scroll '>
-            <MonthlyBilledClientsChart
-              clientName={agentsName}
-              billableHrs={activityAvg}
-            />
+            <BarChart names={internalteamNames} values={activityAvg} />
           </div>
         </div>
       )}

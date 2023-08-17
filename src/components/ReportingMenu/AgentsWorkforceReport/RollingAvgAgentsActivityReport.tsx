@@ -3,9 +3,8 @@ import { useInfiniteQuery } from '@tanstack/react-query'
 import { useFiltersStore } from '@/store/useFiltersStore'
 import { RotateCw } from 'lucide-react'
 import { useAuthStore } from '@/store/useAuthStore'
-// import { RollingAVGInternalTeamActivityChart } from './Charts/RollingAVGInternalTeamActivityChart'
 import useIntersectionObserver from '@/hooks/useIntersectionObserver'
-import { MonthlyBilledClientsChart } from './Charts/MonthlyBilledClientsChart'
+import { BarChart } from './Charts/BarChart'
 
 interface MonthlyActivity {
   month: string
@@ -177,7 +176,9 @@ const RollingAvgAgentsActivityReport = () => {
           activityAvg:
             totalMonthlyRollingAvg === null
               ? 0
-              : totalMonthlyRollingAvg.toFixed(2).replace(/[.,]00$/, ''),
+              : Number(
+                  totalMonthlyRollingAvg.toFixed(2).replace(/[.,]00$/, '')
+                ),
         }
       })
     }
@@ -185,7 +186,7 @@ const RollingAvgAgentsActivityReport = () => {
   })
 
   const agentsName: string[] = []
-  const activityAvg: string[] = []
+  const activityAvg: number[] = []
 
   clientData?.forEach((obj: any) => {
     if (obj?.agentsName) {
@@ -197,8 +198,7 @@ const RollingAvgAgentsActivityReport = () => {
   })
 
   return (
-    // <>Rollling AVG</>
-    <>
+    <div>
       {clientData?.length === 0 ? (
         <p className=' text-base text-[#69C920]'>No Data Found</p>
       ) : (
@@ -231,14 +231,11 @@ const RollingAvgAgentsActivityReport = () => {
           </div>
 
           <div className=' mx-auto max-h-[480px] w-full flex-1 overflow-x-scroll '>
-            <MonthlyBilledClientsChart
-              clientName={agentsName}
-              billableHrs={activityAvg}
-            />
+            <BarChart names={agentsName} values={activityAvg} />
           </div>
         </div>
       )}
-    </>
+    </div>
   )
 }
 

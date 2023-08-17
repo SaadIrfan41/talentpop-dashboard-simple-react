@@ -4,8 +4,8 @@ import { ExpandIcon, SettingIcon } from '../../Icons'
 import TotalActiveAgents from './TotalActiveAgents'
 import TotalInternalTeamMembers from './TotalInternalTeamMembers'
 import TotalBilledHours from './TotalBilledHours'
-import AverageAgentActivity from './AverageAgentActivity'
-import AverageInternalTeamActivity from './AverageInternalTeamActivity'
+// import AverageAgentActivity from './AverageAgentActivity'
+// import AverageInternalTeamActivity from './AverageInternalTeamActivity'
 import ClientsWithAgents from './ClientsWithAgents'
 import TotalInternalMembers from './TotalInternalMembers'
 import AbandonedLateOntimeShifts from './Charts/AbandonedLateOntimeShifts'
@@ -17,18 +17,26 @@ import InternalTeamActivityRate from './InternalTeamActivityRate'
 import RollingAvgAgentsActivityReport from './RollingAvgAgentsActivityReport'
 import InternalTeamLowActivityReport from './InternalTeamLowActivityReport'
 import InternalTeamHighActivityReport from './InternalTeamHighActivityReport'
+import { AbandonedLateOntimeShiftsButton } from './SettingOptionButton/AbandonedLateOntimeShiftsButton'
+import { RollingAVGActivityReportOptionButton } from './SettingOptionButton/RollingAVGActivityReportSettingOption'
+import { useReportingMenuStore } from '@/store/useReportingMenuStore'
+import LowActivityReportAgents from './LowActivityReportAgents'
+import LowActivityReportInternalTeam from './LowActivityReportInternalTeam'
+import HighActivityReportInternalTeam from './HighActivityReportInternalTeam'
+import HighActivityReportAgents from './HighActivityReportAgents'
 
 const AgentsWorkforceReport = () => {
   const { reportingMenu } = useMenuStore()
+  const { Rolling_AVG_Activity_Report_Setting_Option } = useReportingMenuStore()
 
   return (
     <>
       {reportingMenu === 1 && (
         <section className=' rounded-b-2xl rounded-tr-2xl border bg-white  px-7 pb-20 pt-11'>
-          <div className=' grid grid-cols-5  gap-4 text-[#163143]'>
+          <div className=' grid grid-cols-7  gap-4 text-[#163143]'>
             <div className=' flex  min-h-[150px] flex-col rounded-2xl border  pt-4 text-center 2xl:min-h-[180px]'>
-              <span className=' mb-4  text-xs   font-extrabold capitalize  2xl:text-base '>
-                Total Active Agents
+              <span className=' mb-2 text-xs   font-extrabold capitalize  2xl:text-base '>
+                Total No. Active Agents
               </span>
               <div className=' h-[2px] w-full bg-[#EFEFEF]' />
               <div className=' flex flex-col py-5 2xl:gap-3 '>
@@ -41,8 +49,8 @@ const AgentsWorkforceReport = () => {
               </div>
             </div>
             <div className=' flex  min-h-[150px] flex-col rounded-2xl border  pt-4 text-center 2xl:min-h-[180px]'>
-              <span className=' mb-4  text-xs   font-extrabold capitalize  2xl:text-base '>
-                Total Internal Members
+              <span className=' mb-2 text-xs   font-extrabold capitalize  2xl:text-base text- '>
+                Total Internal Team Members
               </span>
               <div className=' h-[2px] w-full bg-[#EFEFEF]' />
               <div className=' flex flex-col py-5 2xl:gap-3 '>
@@ -55,8 +63,8 @@ const AgentsWorkforceReport = () => {
               </div>
             </div>
             <div className=' flex  min-h-[150px] flex-col rounded-2xl border  pt-4 text-center 2xl:min-h-[180px]'>
-              <span className=' mb-4  text-xs   font-extrabold capitalize  2xl:text-base '>
-                Total Billed Hours
+              <span className=' mb-2  text-xs   font-extrabold capitalize  2xl:text-base '>
+                Total No. Billed Hours
               </span>
               <div className=' h-[2px] w-full bg-[#EFEFEF]' />
               <div className=' flex flex-col px-3 py-5 2xl:gap-3'>
@@ -68,8 +76,8 @@ const AgentsWorkforceReport = () => {
                 </div>
               </div>
             </div>
-            <div className=' flex  min-h-[150px] flex-col rounded-2xl border  pt-4 text-center 2xl:min-h-[180px]'>
-              <span className=' mb-4  text-xs   font-extrabold capitalize  2xl:text-base '>
+            {/* <div className=' flex  min-h-[150px] flex-col rounded-2xl border  pt-4 text-center 2xl:min-h-[180px]'>
+              <span className=' mb-2 text-xs   font-extrabold capitalize  2xl:text-base '>
                 Avg. Agent Activity
               </span>
               <div className=' h-[2px] w-full bg-[#EFEFEF]' />
@@ -81,9 +89,9 @@ const AgentsWorkforceReport = () => {
                   <AverageAgentActivity />
                 </span>
               </div>
-            </div>
-            <div className=' flex  min-h-[150px] flex-col rounded-2xl border  pt-4 text-center 2xl:min-h-[180px]'>
-              <span className=' mb-4  text-xs   font-extrabold capitalize  2xl:text-base '>
+            </div> */}
+            {/* <div className=' flex  min-h-[150px] flex-col rounded-2xl border  pt-4 text-center 2xl:min-h-[180px]'>
+              <span className=' mb-2 text-xs   font-extrabold capitalize  2xl:text-base '>
                 Avg. Internal Team Activity
               </span>
               <div className=' h-[2px] w-full bg-[#EFEFEF]' />
@@ -93,6 +101,62 @@ const AgentsWorkforceReport = () => {
                 </span>
                 <span className='flex items-center justify-center gap-1 text-2xl font-extrabold 2xl:text-[40px]'>
                   <AverageInternalTeamActivity />
+                </span>
+              </div>
+            </div> */}
+            <div className=' flex  min-h-[150px] flex-col rounded-2xl border  pt-4 text-center 2xl:min-h-[180px]'>
+              <span className=' mb-2 text-xs   font-extrabold capitalize  2xl:text-base '>
+                Low Agents Activity Report
+              </span>
+              <div className=' h-[2px] w-full bg-[#EFEFEF]' />
+              <div className=' flex flex-col py-5 2xl:gap-3 '>
+                <span className=' text-sm font-medium 2xl:text-lg'>
+                  Avg. Rate
+                </span>
+                <span className='flex items-center justify-center gap-1 text-2xl font-extrabold 2xl:text-[40px]'>
+                  <LowActivityReportAgents />
+                </span>
+              </div>
+            </div>
+            <div className=' flex  min-h-[150px] flex-col rounded-2xl border  pt-4 text-center 2xl:min-h-[180px]'>
+              <span className=' mb-2 text-xs   font-extrabold capitalize  2xl:text-base '>
+                Low internal Team Activity Report
+              </span>
+              <div className=' h-[2px] w-full bg-[#EFEFEF]' />
+              <div className=' flex flex-col py-5 2xl:gap-3 '>
+                <span className=' text-sm font-medium 2xl:text-lg'>
+                  Avg. Rate
+                </span>
+                <span className='flex items-center justify-center gap-1 text-2xl font-extrabold 2xl:text-[40px]'>
+                  <LowActivityReportInternalTeam />
+                </span>
+              </div>
+            </div>
+            <div className=' flex  min-h-[150px] flex-col rounded-2xl border  pt-4 text-center 2xl:min-h-[180px]'>
+              <span className=' mb-2 text-xs   font-extrabold capitalize  2xl:text-base '>
+                High Agents Activity Report
+              </span>
+              <div className=' h-[2px] w-full bg-[#EFEFEF]' />
+              <div className=' flex flex-col py-5 2xl:gap-3 '>
+                <span className=' text-sm font-medium 2xl:text-lg'>
+                  Avg. Rate
+                </span>
+                <span className='flex items-center justify-center gap-1 text-2xl font-extrabold 2xl:text-[40px]'>
+                  <HighActivityReportAgents />
+                </span>
+              </div>
+            </div>
+            <div className=' flex  min-h-[150px] flex-col rounded-2xl border  pt-4 text-center 2xl:min-h-[180px]'>
+              <span className=' mb-2 text-xs   font-extrabold capitalize  2xl:text-base '>
+                High Internal Team Activity Report
+              </span>
+              <div className=' h-[2px] w-full bg-[#EFEFEF]' />
+              <div className=' flex flex-col py-5 2xl:gap-3 '>
+                <span className=' text-sm font-medium 2xl:text-lg'>
+                  Avg. Rate
+                </span>
+                <span className='flex items-center justify-center gap-1 text-2xl font-extrabold 2xl:text-[40px]'>
+                  <HighActivityReportInternalTeam />
                 </span>
               </div>
             </div>
@@ -138,7 +202,7 @@ const AgentsWorkforceReport = () => {
                 </span>
                 <div className='ml-auto flex items-center gap-3'>
                   <ExpandIcon />
-                  <SettingIcon />
+                  <AbandonedLateOntimeShiftsButton />
                 </div>
               </div>
               <div className=' h-[2px] w-full bg-[#EFEFEF]' />
@@ -165,19 +229,28 @@ const AgentsWorkforceReport = () => {
           <div className=' mt-10  min-h-[480px] rounded-2xl border text-[#163143]   '>
             <div className='flex items-center px-4 py-4 '>
               <h3 className=' text-base font-extrabold'>
-                Rolling Avg. Internal Team Activity Report
+                Rolling Avg.{' '}
+                {Rolling_AVG_Activity_Report_Setting_Option === 'internal_team'
+                  ? 'Internal Team '
+                  : 'Agents '}
+                Activity Report
               </h3>
               <div className='ml-auto flex items-center gap-3'>
                 <ExpandIcon />
-                <SettingIcon />
+                <RollingAVGActivityReportOptionButton />
+
+                {/* <SettingIcon /> */}
               </div>
             </div>
             <div className=' h-[2px] w-full bg-[#EFEFEF]' />
-
-            <InternalTeamReportAVG />
+            {Rolling_AVG_Activity_Report_Setting_Option === 'internal_team' ? (
+              <InternalTeamReportAVG />
+            ) : (
+              <RollingAvgAgentsActivityReport />
+            )}
           </div>
           {/* Rolling Avg. Agents Activity Report  */}
-          <div className=' mt-10  min-h-[480px] rounded-2xl border text-[#163143]   '>
+          {/* <div className=' mt-10  min-h-[480px] rounded-2xl border text-[#163143]   '>
             <div className='flex items-center px-4 py-4 '>
               <h3 className=' text-base font-extrabold'>
                 Rolling Avg. Agents Activity Report
@@ -190,7 +263,7 @@ const AgentsWorkforceReport = () => {
             <div className=' h-[2px] w-full bg-[#EFEFEF]' />
 
             <RollingAvgAgentsActivityReport />
-          </div>
+          </div> */}
           {/* AGENTS ACTIVITY REPORT */}
           <div className='grid  grid-cols-2 gap-10  pt-11'>
             {/* Agents High Activity Report */}

@@ -27,7 +27,8 @@ function createGradient(ctx: CanvasRenderingContext2D, area: ChartArea) {
   return gradient
 }
 
-export function MonthlyBilledClientsChart({ clientName, billableHrs }: any) {
+export function BarChart({ names, values }: any) {
+  // console.log(names, values)
   const chartRef = useRef<ChartJS>(null)
   const [chartData, setChartData] = useState<ChartData<'bar'>>({
     datasets: [],
@@ -40,11 +41,11 @@ export function MonthlyBilledClientsChart({ clientName, billableHrs }: any) {
       return
     }
     const data = {
-      labels: clientName,
+      labels: names,
       datasets: [
         {
           //  label: 'Dataset 1',
-          data: billableHrs,
+          data: values,
         },
         // {
         //   label: 'Dataset 2',
@@ -62,12 +63,12 @@ export function MonthlyBilledClientsChart({ clientName, billableHrs }: any) {
     }
 
     setChartData(chartData)
-  }, [billableHrs, clientName])
+  }, [values, names])
 
   const options = {
     // indexAxis: 'x' as const,
-    // barThickness: clientName.length < 200 ? 50 : 10,
-    barThickness: clientName.length < 30 ? 30 : 10,
+    // barThickness: names.length < 200 ? 50 : 10,
+    barThickness: names.length < 30 ? 30 : 10,
 
     maintainAspectRatio: false,
     elements: {
@@ -97,9 +98,9 @@ export function MonthlyBilledClientsChart({ clientName, billableHrs }: any) {
 
   return (
     <div
-      // style={{ width: clientName.length * 20 }}
+      // style={{ width: names.length * 20 }}
       style={{
-        width: clientName.length < 100 ? '100%' : clientName.length * 10,
+        width: names.length < 50 ? '100%' : names.length * 15,
       }}
       className='mx-auto h-[450px]  '
     >
@@ -109,7 +110,7 @@ export function MonthlyBilledClientsChart({ clientName, billableHrs }: any) {
         options={options}
         type='bar'
         data={chartData}
-        // width={clientName.length * 20}
+        // width={names.length * 20}
         height={'100%'}
         className={` `}
       />

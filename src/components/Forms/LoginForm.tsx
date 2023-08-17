@@ -103,9 +103,9 @@ const LoginForm = () => {
           type='submit'
         >
           {loading ? (
-            <button>
+            <button className=' gap-x-1'>
               Loggin In
-              <Loader2 className='mr-2 h-4 w-4 animate-spin' />
+              <Loader2 className='mr-2 h-4 w-4 animate-spin mt-1' />
             </button>
           ) : (
             <button>Login</button>

@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query'
 import { useFiltersStore } from '@/store/useFiltersStore'
 import { RotateCw } from 'lucide-react'
 import { useAuthStore } from '@/store/useAuthStore'
-import { StatsNegativeIcon } from '@/components/Icons'
+// import { StatsNegativeIcon } from '@/components/Icons'
 
 const getTotalBilledHours = async (
   filterClientName: string[],
@@ -133,7 +133,7 @@ const TotalBilledHours = () => {
         ? formatNumberToShort(data?.data[0].total_hours)
         : 0}
 
-      <StatsNegativeIcon />
+      {/* <StatsNegativeIcon /> */}
     </div>
   )
 }

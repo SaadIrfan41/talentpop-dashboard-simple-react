@@ -4,6 +4,7 @@ import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js'
 import { Doughnut } from 'react-chartjs-2'
 import { RotateCw } from 'lucide-react'
 import { useAuthStore } from '@/store/useAuthStore'
+import { useReportingMenuStore } from '@/store/useReportingMenuStore'
 
 ChartJS.register(ArcElement, Tooltip, Legend)
 
@@ -46,7 +47,7 @@ const getAbandonedLateOntimeShifts = async (
 
   try {
     const res = await fetch(
-      `http://18.237.25.116:8000/abandoned-late-ontime-shifts-by-count?${clientQueryParam}&${agentsQueryParam}&${teamLeadQueryParam}&${OM_QueryParam}&${CSM_QueryParam}&startdate=${startingDateFilter}&enddate=${endingDateFilter}`,
+      `http://18.237.25.116:8000/abandoned-late-ontime-shifts-by-count-and-percentage?${clientQueryParam}&${agentsQueryParam}&${teamLeadQueryParam}&${OM_QueryParam}&${CSM_QueryParam}&startdate=${startingDateFilter}&enddate=${endingDateFilter}`,
       {
         headers: {
           accept: 'application/json',
@@ -75,6 +76,7 @@ const AbandonedLateOntimeShifts = () => {
     endingDateFilter,
   } = useFiltersStore()
   const { access_token } = useAuthStore()
+  const { Abandoned_Late_Ontime_Shift_Setting_Option } = useReportingMenuStore()
 
   const { data, isLoading, error } = useQuery({
     queryKey: [
@@ -124,34 +126,53 @@ const AbandonedLateOntimeShifts = () => {
     return array.every((value: number) => value === 0)
   }
 
-  const values = [
-    data[0].late_count,
-    data[0].abandoned_count,
-    data[0].missed_count,
-    data[0].ontime_count,
+  const count = [
+    data[0]?.late_count,
+    data[0]?.abandoned_count,
+    data[0]?.missed_count,
+    data[0]?.ontime_count,
   ]
-  const dataAvaliable = !areAllZeros(values)
+  const percentage = [
+    data[0]?.late_percentage?.toFixed(2),
+    data[0]?.abandoned_percentage?.toFixed(2),
+    data[0]?.missed_percentage?.toFixed(2),
+    data[0]?.ontime_percentage?.toFixed(2),
+  ]
+  const dataAvaliable = !areAllZeros(
+    Abandoned_Late_Ontime_Shift_Setting_Option === 'count' ? count : percentage
+  )
 
   const Chartdata = {
     labels: ['Late', 'Abandoned', 'Missed', 'Ontime'],
     datasets: [
       {
-        data: [
-          data[0].late_count,
-          data[0].abandoned_count,
-          data[0].missed_count,
-          data[0].ontime_count,
-        ],
+        data: count,
         backgroundColor: ['#398D5B', '#6EF96C', '#1D542C', '#133418'],
         borderColor: ['#398D5B', '#6EF96C', '#1D542C', '#133418'],
         borderWidth: 1,
       },
     ],
   }
+  const Chartdata2 = {
+    labels: ['Late', 'Abandoned', 'Missed', 'Ontime'],
+    datasets: [
+      {
+        data: percentage,
+        backgroundColor: ['#398D5B', '#6EF96C', '#1D542C', '#133418'],
+        borderColor: ['#398D5B', '#6EF96C', '#1D542C', '#133418'],
+        borderWidth: 1,
+      },
+    ],
+  }
+  console.log(Chartdata)
 
   return dataAvaliable ? (
     <Doughnut
-      data={Chartdata}
+      data={
+        Abandoned_Late_Ontime_Shift_Setting_Option === 'count'
+          ? Chartdata
+          : Chartdata2
+      }
       options={{
         plugins: {
           legend: { display: true, position: 'bottom' },
