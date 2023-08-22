@@ -1,6 +1,7 @@
 import { Button } from '@/components/ui/button'
 // import { useId } from 'react'
 // import generator from 'generate-password'
+import { v4 as uuidv4 } from 'uuid'
 import {
   Form,
   FormControl,
@@ -83,7 +84,7 @@ export function RegisterUserDialogButton() {
     form.reset()
   }
   const GeneratePassword = () => {
-    const password = crypto.randomUUID()
+    const password = uuidv4()
 
     setrandomPassword(password)
   }
