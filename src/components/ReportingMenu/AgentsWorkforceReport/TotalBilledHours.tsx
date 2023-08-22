@@ -85,9 +85,10 @@ const TotalBilledHours = () => {
     startingDateFilter,
     endingDateFilter,
   } = useFiltersStore()
+
   const { access_token } = useAuthStore()
 
-  const { data, isLoading, error } = useQuery({
+  const { data, isLoading, error, isRefetching, isRefetchError } = useQuery({
     queryKey: [
       'total-billed-hours-count',
       filterClientName,
@@ -110,7 +111,8 @@ const TotalBilledHours = () => {
         access_token
       ),
   })
-  if (isLoading)
+
+  if (isLoading || isRefetching)
     return (
       <p className=' text-base capitalize text-[#69C920]'>
         <span className=' flex items-center gap-2'>
@@ -118,7 +120,8 @@ const TotalBilledHours = () => {
         </span>
       </p>
     )
-  if (error) return <p className=' text-base text-[#69C920]'>Error</p>
+  if (error || isRefetchError)
+    return <p className=' text-base text-[#69C920]'>Error</p>
   if (data.message) {
     if (data.message === 'Not authenticated')
       return (

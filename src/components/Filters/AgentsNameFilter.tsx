@@ -7,6 +7,7 @@ import { Skeleton } from '../ui/skeleton'
 import { useAutoAnimate } from '@formkit/auto-animate/react'
 import { useAuthStore } from '@/store/useAuthStore'
 import useClickOutside from '@/lib/useClickOutside'
+import { useMenuStore } from '@/store/useMenuStore'
 const AgentsNameFilter = () => {
   const [animateRef] = useAutoAnimate()
   const { access_token } = useAuthStore()
@@ -43,26 +44,42 @@ const AgentsNameFilter = () => {
   const [filteredData, setFilteredData] = useState([])
   const [selectedAlphabet, setSelectedAlphabet] = useState('A')
   const [showModal, setshowModal] = useState(false)
+  const [agentsNames, setagentsNames] = useState([])
+
   useClickOutside(clickOutsideRef, () => {
     setshowModal(false)
   })
   const { addAgentsNames } = useFiltersStore()
+  const { resetAgentsNames, setResetresetAgentsNames } = useMenuStore()
+
   useEffect(() => {
+    // if (data) {
+    //   setFilteredData(data)
+    // }
     if (data) {
-      setFilteredData(data)
+      const agentsNameList = data
+        .map((agent: any) => {
+          const agentsName = agent['users.name']
+          return agentsName
+        })
+        .sort()
+      // console.log(agentsNameList)
+      setFilteredData(agentsNameList)
+      setagentsNames(agentsNameList)
     }
-  }, [data])
+    if (resetAgentsNames) {
+      setSelectedNames([])
+      setResetresetAgentsNames(false)
+    }
+  }, [data, resetAgentsNames, setResetresetAgentsNames])
 
   const handleAlphabetClick = (alphabet: any) => {
     setSelectedAlphabet(alphabet)
 
-    const filteredNames = data.filter((item: any) => {
-      const name =
-        item['users.name'] === null
-          ? 'No Name'
-          : item['users.name'].toLowerCase()
+    const filteredNames = agentsNames.filter((item: any) => {
+      const name = item === null ? 'No Name' : item?.toLowerCase()
       const firstChar = name[0]
-      return firstChar.toLowerCase() === alphabet.toLowerCase()
+      return firstChar?.toLowerCase() === alphabet?.toLowerCase()
     })
     setFilteredData(filteredNames)
   }
@@ -71,9 +88,8 @@ const AgentsNameFilter = () => {
     const searchText = searchRef.current?.value || ''
     // setSearchText(searchText);
 
-    const filteredNames = data.filter(
-      (item: any) =>
-        item['users.name']?.toLowerCase().includes(searchText.toLowerCase())
+    const filteredNames = agentsNames.filter(
+      (item: any) => item?.toLowerCase().includes(searchText.toLowerCase())
     )
     setFilteredData(filteredNames)
   }
@@ -95,22 +111,13 @@ const AgentsNameFilter = () => {
       selectedNames.filter((selectedName) => selectedName !== name)
     )
   }
-
   const renderNameList = () => {
     let currentAlphabet: any = null
 
     return filteredData.map((item: any, index: any) => {
-      const name = item['users.name'] === null ? 'No Name' : item['users.name']
+      const name = item === null ? 'No Name' : item
       //
-      let firstChar
-      //   firstChar = name[0]?.toUpperCase();
-      const match = name?.match(/[A-Za-z]/)
-      //   if (firstChar === " ") {
-      //     firstChar = name[0]?.toUpperCase();
-      //   }
-      if (match) {
-        firstChar = match[0]
-      }
+      const firstChar = name?.charAt(0)?.toUpperCase()
 
       // Check if the first character is different from the current alphabet
       if (firstChar !== currentAlphabet) {
@@ -128,11 +135,14 @@ const AgentsNameFilter = () => {
               <li key={`name-${index}`} className=' flex gap-x-2 text-sm'>
                 <div className=' pt-[2px]'>
                   <input
+                    // style={{
+                    //   accentColor: "#69C920",
+                    // }}
                     type='checkbox'
-                    className='pt-3'
+                    className='pt-3 text-white'
                     checked={selectedNames.includes(
                       //@ts-ignore
-                      `${name}`
+                      `${name.trim()}`
                     )}
                     onChange={(event) => handleNameCheckboxChange(event, name)}
                   />
@@ -153,7 +163,7 @@ const AgentsNameFilter = () => {
               //@ts-ignore
               checked={selectedNames.includes(
                 //@ts-ignore
-                `${name}`
+                `${name.trim()}`
               )}
               className='pt-3'
               onChange={(event) => handleNameCheckboxChange(event, name)}

@@ -52,9 +52,11 @@ const getLowActivityReportInternalTeam = async (
       }
     )
     const data = await res.json()
+    console.log('Low', data)
     if (res.status === 401) {
       return { message: 'Not authenticated' }
     }
+
     return data
   } catch (error: any) {
     return { message: 'Internal Server Error' }
@@ -72,7 +74,7 @@ const LowActivityReportInternalTeam = () => {
   } = useFiltersStore()
   const { access_token } = useAuthStore()
 
-  const { data, isLoading, error } = useQuery({
+  const { data, isLoading, error, isRefetching } = useQuery({
     queryKey: [
       'low-activity-rate-report-internal-team-percentage',
       filterClientName,
@@ -95,7 +97,7 @@ const LowActivityReportInternalTeam = () => {
         access_token
       ),
   })
-  if (isLoading)
+  if (isLoading || isRefetching)
     return (
       <p className=' text-base capitalize text-[#69C920]'>
         <span className=' flex items-center gap-2'>
@@ -111,6 +113,7 @@ const LowActivityReportInternalTeam = () => {
       )
     return <p className=' text-base text-[#69C920]'>{data.message}</p>
   }
+
   return (
     <>
       {data[0]?.percentage_below_30 === null

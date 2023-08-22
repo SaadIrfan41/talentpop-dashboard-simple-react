@@ -74,7 +74,7 @@ const AgentsHighActivityReport = () => {
   } = useFiltersStore()
   const { access_token } = useAuthStore()
 
-  const { data, isLoading, error } = useQuery({
+  const { data, isLoading, error, isRefetching } = useQuery({
     queryKey: [
       'agents-high-activity-report',
       filterClientName,
@@ -97,7 +97,7 @@ const AgentsHighActivityReport = () => {
         access_token
       ),
   })
-  if (isLoading)
+  if (isLoading || isRefetching)
     return (
       <p className=' grid h-[400px] w-full place-items-center  text-center text-3xl  font-bold  capitalize text-[#69C920]'>
         <span className=' flex items-center gap-2'>

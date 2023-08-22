@@ -9,9 +9,72 @@ import OperationManagerFilter from '@/components/Filters/OperationManagerFilter'
 import CSMNameFilter from '@/components/Filters/CSMFilter'
 import DateFilter from '@/components/Filters/DateFilter'
 import ReportingMenu from './components/ReportingMenu/ReportingMenu'
-// import ClientsWithAgents from './components/testing/test'
+import { RegisterUserDialogButton } from './components/RegisterUserDialogButton'
+import { useFiltersStore } from './store/useFiltersStore'
+import { queryClient } from './main'
+import { useMenuStore } from './store/useMenuStore'
 
 const HomePage = () => {
+  const {
+    setResetClientNames,
+    setResetresetAgentsNames,
+    setResetTeamLeadsNames,
+    setResetOMNames,
+    setResetCSMNames,
+  } = useMenuStore()
+  const {
+    addClientNames,
+    addAgentsNames,
+    addCsmsNames,
+    addOmsNames,
+    addTeamLeadsNames,
+    addendingdate,
+    addstartingdate,
+  } = useFiltersStore()
+
+  const handelRefreshQueries = () => {
+    addClientNames([])
+    addAgentsNames([])
+    addCsmsNames([])
+    addOmsNames([])
+    addTeamLeadsNames([])
+    addendingdate('')
+    addstartingdate('')
+    setResetClientNames(true)
+    setResetresetAgentsNames(true)
+    setResetTeamLeadsNames(true)
+    setResetOMNames(true)
+    setResetCSMNames(true)
+
+    queryClient.invalidateQueries({
+      queryKey: [
+        'client-names-for-filter',
+        'agents-names-for-filter',
+        'CSM-names-for-filter',
+        'operation-manager-names-for-filter',
+        'TeamLeads-names-for-filter',
+        'total-active-agents',
+        'total-internal-team-members',
+        'total-billed-hours-count',
+        'low-activity-rate-report-agents-percentage',
+        'low-activity-rate-report-internal-team-percentage',
+        'high-activity-rate-report-agents-percentage',
+        'high-activity-rate-report-internal-team-percentage',
+        'clients-with-agents',
+        'abandoned-late-ontime-shifts',
+        'hours-billed-last-month',
+        'internal-team-report-avg',
+        'agents-report-avg',
+        'internal-team-low-activity-report',
+        'agents-low-activity-report',
+        'internal-team-high-activity-report',
+        'agents-high-activity-report',
+        'acceptable-activity-rate-report-agents',
+        'internal-team-activity-rate',
+      ],
+    })
+  }
+
   return (
     // <>
     //   <ClientsWithAgents />
@@ -23,7 +86,10 @@ const HomePage = () => {
           <div className=' flex items-center text-lg font-bold text-[#163143]'>
             All reports <ChevronDown />
           </div>
-          <LogoutButton />
+          <div className=' flex items-center ml-auto gap-16'>
+            <RegisterUserDialogButton />
+            <LogoutButton />
+          </div>
         </nav>
       </header>
       <section className=' pl-10 pr-16'>
@@ -31,7 +97,20 @@ const HomePage = () => {
           <h1 className='  text-2xl font-extrabold text-[#343434] '>
             Agent workforce report
           </h1>
-          <button className='ml-auto flex items-center rounded-full bg-[#69C920] px-4 py-3 text-white'>
+          <button
+            onClick={() => handelRefreshQueries()}
+            // onClick={() => {
+            //   setRefetchQuery(true)
+            //   addClientNames([])
+            //   addAgentsNames([])
+            //   addCsmsNames([])
+            //   addOmsNames([])
+            //   addTeamLeadsNames([])
+            //   addendingdate('')
+            //   addstartingdate('')
+            // }}
+            className='ml-auto flex items-center rounded-full bg-[#69C920] px-4 py-3 text-white'
+          >
             {' '}
             Refresh Report <RefreshCw className='ml-2' />{' '}
           </button>

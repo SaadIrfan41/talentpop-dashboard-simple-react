@@ -2,17 +2,18 @@
 import { useFiltersStore } from '@/store/useFiltersStore'
 import { useQuery } from '@tanstack/react-query'
 // import { CookieValueTypes, getCookie, hasCookie } from "cookies-next";
-import { ChevronDown, ChevronUp, Search, X } from 'lucide-react'
+import { ChevronDown, ChevronUp, Loader2, Search, X } from 'lucide-react'
 import { Fragment, useEffect, useRef, useState } from 'react'
 import { Skeleton } from '../ui/skeleton'
 import useClickOutside from '@/lib/useClickOutside'
 import { useAuthStore } from '@/store/useAuthStore'
+import { useMenuStore } from '@/store/useMenuStore'
 
 const ClientsNameFilter = () => {
   // const [animateRef] = useAutoAnimate();
   const { access_token } = useAuthStore()
   const clickOutsideRef = useRef<HTMLDivElement>(null)
-  const { data, isLoading, error } = useQuery({
+  const { data, isLoading, error, isRefetching } = useQuery({
     queryKey: ['client-names-for-filter'],
     queryFn: () => getCientNames(),
   })
@@ -37,45 +38,68 @@ const ClientsNameFilter = () => {
       return { message: 'Internal Server Error' }
     }
   }
+
+  // console.log('Project List', projectNameList)
   const searchRef = useRef<HTMLInputElement>(null)
+  const [loadingFilter, setloadingFilter] = useState(false)
   const [selectedNames, setSelectedNames] = useState([])
   const [filteredData, setFilteredData] = useState([])
+  const [clientNames, setclientNames] = useState([])
   const [selectedAlphabet, setSelectedAlphabet] = useState('A')
   const [showModal, setshowModal] = useState(false)
 
   const { addClientNames } = useFiltersStore()
+  const { resetClientNames, setResetClientNames } = useMenuStore()
+
   useEffect(() => {
     if (data) {
-      setFilteredData(data)
+      const projectNameList = data.map((project: any) => {
+        const projectName = project['projects.name']
+        const indexOfHyphen = projectName.indexOf('-')
+        if (indexOfHyphen !== -1 && indexOfHyphen + 1 < projectName.length) {
+          return projectName.substring(indexOfHyphen + 1).trim()
+        } else {
+          return projectName.trim()
+        }
+      })
+      setFilteredData(projectNameList)
+      setclientNames(projectNameList)
     }
-  }, [data])
+    if (resetClientNames) {
+      setSelectedNames([])
+      setResetClientNames(false)
+    }
+  }, [resetClientNames, setResetClientNames, data])
   useClickOutside(clickOutsideRef, () => {
     setshowModal(false)
   })
 
-  const handleAlphabetClick = (alphabet: any) => {
+  const handleAlphabetClick = (alphabet: string) => {
     setSelectedAlphabet(alphabet)
+    console.log(alphabet)
+    setloadingFilter(true)
 
-    const filteredNames = data.filter((item: any) => {
-      const name =
-        item['projects.name'] === null
-          ? 'No Name'
-          : item['projects.name'].toLowerCase()
-      const firstChar = name?.charAt(name.indexOf('-') + 2)
+    const filteredNames = clientNames.filter((item: string) => {
+      const name = item === null ? 'No Name' : item.toLowerCase()
+      const firstChar = name?.charAt(0)
       return firstChar.toLowerCase() === alphabet.toLowerCase()
     })
+    // console.log(filteredData)
     setFilteredData(filteredNames)
+    setloadingFilter(false)
   }
 
   const handleSearchChange = () => {
+    setloadingFilter(true)
     const searchText = searchRef.current?.value || ''
     // setSearchText(searchText);
 
-    const filteredNames = data.filter(
-      (item: any) =>
-        item['projects.name']?.toLowerCase().includes(searchText.toLowerCase())
+    const filteredNames = clientNames.filter(
+      (item: any) => item?.toLowerCase().includes(searchText.toLowerCase())
     )
+    // console.log(filteredNames)
     setFilteredData(filteredNames)
+    setloadingFilter(false)
   }
 
   const handleNameCheckboxChange = (event: any, name: any) => {
@@ -95,19 +119,97 @@ const ClientsNameFilter = () => {
     )
   }
 
+  if (isLoading || isRefetching)
+    return (
+      <>
+        <Skeleton className=' relative h-8 w-24 rounded-full  border bg-slate-200  font-bold text-[#163143]' />
+      </>
+    )
+
+  if (error) return <p className=' text-base text-[#69C920]'>Error</p>
+  if (data.message) {
+    if (data.message === 'Not authenticated')
+      return (
+        <p className=' text-base text-[#69C920]'>Login Credentials Invalid</p>
+      )
+    return <p className=' text-base text-[#69C920]'>{data.message}</p>
+  }
+
   const renderNameList = () => {
     let currentAlphabet: any = null
+    // if (filteredData) {
+    //   return filteredData.map((item: any, index: any) => {
+    //     const name = item === null ? 'No Name' : item
+    //     //
+    //     const firstChar = name?.charAt(name[0])?.toUpperCase()
 
+    //     // if (firstChar === ' ') {
+    //     //   firstChar = name?.charAt(name[0])?.toUpperCase()
+    //     // }
+
+    //     // Check if the first character is different from the current alphabet
+    //     if (firstChar !== currentAlphabet) {
+    //       currentAlphabet = firstChar
+    //       if (!currentAlphabet?.match(/^[A-Za-z]+$/)) {
+    //         currentAlphabet = '#'
+    //       }
+    //       return (
+    //         <Fragment key={`divider-${index}`}>
+    //           <li className=' relative col-span-3 text-[#163143]'>
+    //             {currentAlphabet}
+    //             <div className='absolute inset-0 top-1/2 mx-auto  h-[2px] max-w-md bg-[#ECECEC]' />
+    //           </li>
+    //           <div>
+    //             <li key={`name-${index}`} className=' flex gap-x-2 text-sm'>
+    //               <div className=' pt-[2px]'>
+    //                 <input
+    //                   type='checkbox'
+    //                   className='pt-3 text-white'
+    //                   checked={selectedNames.includes(
+    //                     //@ts-ignore
+    //                     `${name.trim()}`
+    //                   )}
+    //                   onChange={(event) =>
+    //                     handleNameCheckboxChange(event, name)
+    //                   }
+    //                 />
+    //               </div>
+
+    //               <span>{name}</span>
+    //             </li>
+    //           </div>
+    //         </Fragment>
+    //       )
+    //     }
+
+    //     return (
+    //       <li key={`name-${index}`} className=' flex gap-x-2 text-sm'>
+    //         <div className=' pt-[2px]'>
+    //           <input
+    //             type='checkbox'
+    //             //@ts-ignore
+    //             checked={selectedNames.includes(
+    //               //@ts-ignore
+    //               `${name.trim()}`
+    //             )}
+    //             className='pt-3'
+    //             onChange={(event) => handleNameCheckboxChange(event, name)}
+    //           />
+    //         </div>
+
+    //         <span>{name}</span>
+    //       </li>
+    //     )
+    //   })
+    // }
     return filteredData.map((item: any, index: any) => {
-      const name =
-        item['projects.name'] === null ? 'No Name' : item['projects.name']
+      const name = item === null ? 'No Name' : item
       //
-      let firstChar
-      firstChar = name?.charAt(name?.indexOf('-') + 2)?.toUpperCase()
+      const firstChar = name?.charAt(0)?.toUpperCase()
 
-      if (firstChar === ' ') {
-        firstChar = name?.charAt(name?.indexOf('-') + 3)?.toUpperCase()
-      }
+      // if (firstChar === ' ') {
+      //   firstChar = name?.charAt(name[0])?.toUpperCase()
+      // }
 
       // Check if the first character is different from the current alphabet
       if (firstChar !== currentAlphabet) {
@@ -132,30 +234,13 @@ const ClientsNameFilter = () => {
                     className='pt-3 text-white'
                     checked={selectedNames.includes(
                       //@ts-ignore
-                      `${name?.split('-')[1]?.trim()}`
+                      `${name.trim()}`
                     )}
-                    onChange={(event) =>
-                      handleNameCheckboxChange(
-                        event,
-                        name.replace(
-                          'Customer Service - ' ||
-                            'TalentPop - ' ||
-                            'TalentPop - Agent Internal Meetings - ',
-                          ''
-                        )
-                      )
-                    }
+                    onChange={(event) => handleNameCheckboxChange(event, name)}
                   />
                 </div>
 
-                <span>
-                  {name.replace(
-                    'Customer Service - ' ||
-                      'TalentPop - ' ||
-                      'TalentPop - Agent Internal Meetings - ',
-                    ''
-                  )}
-                </span>
+                <span>{name}</span>
               </li>
             </div>
           </Fragment>
@@ -170,51 +255,19 @@ const ClientsNameFilter = () => {
               //@ts-ignore
               checked={selectedNames.includes(
                 //@ts-ignore
-                `${name.split('-')[1]?.trim()}`
+                `${name.trim()}`
               )}
               className='pt-3'
-              onChange={(event) =>
-                handleNameCheckboxChange(
-                  event,
-                  name.replace(
-                    'Customer Service - ' ||
-                      'TalentPop - ' ||
-                      'TalentPop - Agent Internal Meetings - ',
-                    ''
-                  )
-                )
-              }
+              onChange={(event) => handleNameCheckboxChange(event, name)}
             />
           </div>
 
-          <span>
-            {name.replace(
-              'Customer Service - ' ||
-                'TalentPop - ' ||
-                'TalentPop - Agent Internal Meetings - ',
-              ''
-            )}
-          </span>
+          <span>{name}</span>
         </li>
       )
     })
   }
-
-  if (isLoading)
-    return (
-      <>
-        <Skeleton className=' relative h-8 w-24 rounded-full  border bg-slate-200  font-bold text-[#163143]' />
-      </>
-    )
-
-  if (error) return <p className=' text-base text-[#69C920]'>Error</p>
-  if (data.message) {
-    if (data.message === 'Not authenticated')
-      return (
-        <p className=' text-base text-[#69C920]'>Login Credentials Invalid</p>
-      )
-    return <p className=' text-base text-[#69C920]'>{data.message}</p>
-  }
+  // console.log(loadingFilter === true)
 
   return (
     <div style={{ zIndex: 10 }}>
@@ -311,9 +364,13 @@ const ClientsNameFilter = () => {
               )}
             </div>
             <div className=' max-h-72 overflow-y-scroll'>
-              <ul className='mt-4 grid grid-cols-3 gap-4'>
-                {renderNameList()}
-              </ul>
+              {loadingFilter ? (
+                <Loader2 className='mr-2 h-4 w-4 animate-spin mt-1' />
+              ) : (
+                <ul className='mt-4 grid grid-cols-3 gap-4'>
+                  {renderNameList()}
+                </ul>
+              )}
             </div>
           </div>
         </div>

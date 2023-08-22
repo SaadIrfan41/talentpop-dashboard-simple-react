@@ -8,6 +8,7 @@ import { Skeleton } from '../ui/skeleton'
 import { useAutoAnimate } from '@formkit/auto-animate/react'
 import { useAuthStore } from '@/store/useAuthStore'
 import useClickOutside from '@/lib/useClickOutside'
+import { useMenuStore } from '@/store/useMenuStore'
 
 const CSMNameFilter = () => {
   const [animateRef] = useAutoAnimate()
@@ -46,12 +47,31 @@ const CSMNameFilter = () => {
   const [filteredData, setFilteredData] = useState([])
   const [selectedAlphabet, setSelectedAlphabet] = useState('A')
   const [showModal, setshowModal] = useState(false)
+  const [CSMNames, setCSMNames] = useState([])
+
   const { addCsmsNames } = useFiltersStore()
+  const { resetCSMNames, setResetCSMNames } = useMenuStore()
+
   useEffect(() => {
+    // if (data) {
+    //   setFilteredData(data)
+    // }
     if (data) {
-      setFilteredData(data)
+      const CSMNameList = data
+        .map((name: any) => {
+          const agentsName = name['customer_success_manager_name']
+          return agentsName
+        })
+        .sort()
+      // console.log(agentsNameList)
+      setFilteredData(CSMNameList)
+      setCSMNames(CSMNameList)
     }
-  }, [data])
+    if (resetCSMNames) {
+      setSelectedNames([])
+      setResetCSMNames(false)
+    }
+  }, [data, resetCSMNames, setResetCSMNames])
 
   useClickOutside(clickOutsideRef, () => {
     setshowModal(false)
@@ -59,11 +79,8 @@ const CSMNameFilter = () => {
   const handleAlphabetClick = (alphabet: any) => {
     setSelectedAlphabet(alphabet)
 
-    const filteredNames = data.filter((item: any) => {
-      const name =
-        item['customer_success_manager_name'] === null
-          ? 'No Name'
-          : item['customer_success_manager_name']?.toLowerCase()
+    const filteredNames = CSMNames.filter((item: any) => {
+      const name = item === null ? 'No Name' : item?.toLowerCase()
       if (name) {
         const firstChar = name[0]
         return firstChar?.toLowerCase() === alphabet?.toLowerCase()
@@ -76,11 +93,8 @@ const CSMNameFilter = () => {
     const searchText = searchRef.current?.value || ''
     // setSearchText(searchText);
 
-    const filteredNames = data.filter(
-      (item: any) =>
-        item['customer_success_manager_name']
-          ?.toLowerCase()
-          .includes(searchText.toLowerCase())
+    const filteredNames = CSMNames.filter(
+      (item: any) => item?.toLowerCase().includes(searchText.toLowerCase())
     )
     setFilteredData(filteredNames)
   }
@@ -107,20 +121,9 @@ const CSMNameFilter = () => {
     let currentAlphabet: any = null
 
     return filteredData.map((item: any, index: any) => {
-      const name =
-        item['customer_success_manager_name'] === null
-          ? 'No Name'
-          : item['customer_success_manager_name']
+      const name = item === null ? 'No Name' : item
       //
-      let firstChar
-      //   firstChar = name[0]?.toUpperCase();
-      const match = name?.match(/[A-Za-z]/)
-      //   if (firstChar === " ") {
-      //     firstChar = name[0]?.toUpperCase();
-      //   }
-      if (match) {
-        firstChar = match[0]
-      }
+      const firstChar = name?.charAt(0)?.toUpperCase()
 
       // Check if the first character is different from the current alphabet
       if (firstChar !== currentAlphabet) {
@@ -138,11 +141,14 @@ const CSMNameFilter = () => {
               <li key={`name-${index}`} className=' flex gap-x-2 text-sm'>
                 <div className=' pt-[2px]'>
                   <input
+                    // style={{
+                    //   accentColor: "#69C920",
+                    // }}
                     type='checkbox'
-                    className='pt-3'
+                    className='pt-3 text-white'
                     checked={selectedNames.includes(
                       //@ts-ignore
-                      `${name}`
+                      `${name.trim()}`
                     )}
                     onChange={(event) => handleNameCheckboxChange(event, name)}
                   />
@@ -163,7 +169,7 @@ const CSMNameFilter = () => {
               //@ts-ignore
               checked={selectedNames.includes(
                 //@ts-ignore
-                `${name}`
+                `${name.trim()}`
               )}
               className='pt-3'
               onChange={(event) => handleNameCheckboxChange(event, name)}

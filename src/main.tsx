@@ -12,13 +12,14 @@ import PublicRoute from './components/AuthRoute/PublicRoute.tsx'
 import HomePage from './App.tsx'
 import ClientsWithAgents from './components/testing/test.tsx'
 
-const queryClient = new QueryClient({
+export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       refetchOnWindowFocus: false, // default: true
     },
   },
 })
+
 const router = createBrowserRouter([
   {
     path: '/',

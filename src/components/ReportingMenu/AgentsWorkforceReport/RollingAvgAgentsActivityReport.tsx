@@ -87,6 +87,7 @@ const RollingAvgAgentsActivityReport = () => {
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
+    isRefetching,
   } = useInfiniteQuery({
     queryKey: [
       'agents-report-avg',
@@ -132,7 +133,7 @@ const RollingAvgAgentsActivityReport = () => {
     [hasNextPage]
   )
 
-  if (isLoading)
+  if (isLoading || isRefetching)
     return (
       <p className=' grid h-[400px] w-full place-items-center  text-center text-3xl  font-bold  capitalize text-[#69C920]'>
         <span className=' flex items-center gap-2'>

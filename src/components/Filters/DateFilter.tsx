@@ -1,6 +1,6 @@
 'use client'
 // import { useFiltersStore } from "@/store/useFiltersStore";
-import { ChevronDown, ChevronUp } from 'lucide-react'
+import { ChevronDown, ChevronUp, XCircle } from 'lucide-react'
 import { useRef, useState } from 'react'
 import { DatePickerForm } from '../Forms/DateFilterForm'
 import useClickOutside from '@/lib/useClickOutside'
@@ -32,6 +32,12 @@ const DateFilter = () => {
           // ref={clickOutsideRef}
           className=' absolute mx-auto mt-3 min-w-[300px] max-w-xl  rounded-3xl  bg-white shadow-2xl'
         >
+          <div
+            onClick={() => setshowModal(false)}
+            className='absolute right-0 text-red-400  hover:cursor-pointer top-[-5px] '
+          >
+            <XCircle />
+          </div>
           <div className='  flex flex-col items-center py-5 '>
             <DatePickerForm />
           </div>

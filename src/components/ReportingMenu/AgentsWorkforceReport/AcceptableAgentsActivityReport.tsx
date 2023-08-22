@@ -83,6 +83,7 @@ const AcceptableAgentsActivityReport = () => {
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
+    isRefetching,
   } = useInfiniteQuery({
     queryKey: [
       'acceptable-activity-rate-report-agents',
@@ -108,7 +109,7 @@ const AcceptableAgentsActivityReport = () => {
       ),
     getNextPageParam: (lastPage, pages) => {
       //
-      if (lastPage.message === 'no data found') {
+      if (lastPage.message === 'No data found') {
         //
         return undefined
       }
@@ -128,7 +129,7 @@ const AcceptableAgentsActivityReport = () => {
     () => void fetchNextPage(),
     [hasNextPage]
   )
-  if (isLoading)
+  if (isLoading || isRefetching)
     return (
       <p className=' grid h-[400px] w-full place-items-center  text-center text-3xl  font-bold  capitalize text-[#69C920]'>
         <span className=' flex items-center gap-2'>
@@ -150,8 +151,8 @@ const AcceptableAgentsActivityReport = () => {
   }
   // console.log('DATA', data)
   const clientData = data?.pages.flatMap((entry) => {
-    if (entry.message !== 'no data found') {
-      return entry.map((obj: any) => {
+    if (entry.message !== 'No data found') {
+      return entry?.map((obj: any) => {
         return {
           agentsName:
             obj['members.users.name'] === null
@@ -171,8 +172,8 @@ const AcceptableAgentsActivityReport = () => {
   const activityAvg: string[] = []
 
   clientData?.forEach((obj: any) => {
-    agentsName.push(obj.agentsName === null ? 'No Name' : obj.agentsName)
-    activityAvg.push(obj.activityAvg)
+    agentsName.push(obj?.agentsName === null ? 'No Name' : obj?.agentsName)
+    activityAvg.push(obj?.activityAvg)
   })
 
   // console.log('ClientData22', clientData)
@@ -191,10 +192,10 @@ const AcceptableAgentsActivityReport = () => {
                 className='flex gap-16 pl-4 pr-9  '
               >
                 <span>
-                  {value.agentsName === null ? 'No Name' : value.agentsName}
+                  {value?.agentsName === null ? 'No Name' : value?.agentsName}
                 </span>
                 <span className=' ml-auto'>
-                  {value.activityAvg === null ? 0 : value.activityAvg}
+                  {value?.activityAvg === null ? 0 : value?.activityAvg}
                 </span>
               </div>
             ))}

@@ -3,6 +3,8 @@ import { useFiltersStore } from '@/store/useFiltersStore'
 import { RotateCw } from 'lucide-react'
 // import { StatsPositiveIcon } from '@/components/Icons'
 import { useAuthStore } from '@/store/useAuthStore'
+// import { useEffect } from 'react'
+// import { useMenuStore } from '@/store/useMenuStore'
 const getTotalActiveAgents = async (
   filterClientName: string[],
   filterAgentsName: string[],
@@ -71,8 +73,9 @@ const TotalActiveAgents = () => {
     endingDateFilter,
   } = useFiltersStore()
   const { access_token } = useAuthStore()
+  // const { refetchQuery } = useMenuStore()
 
-  const { data, isLoading, error } = useQuery({
+  const { data, isLoading, error, isRefetching, isRefetchError } = useQuery({
     queryKey: [
       'total-active-agents',
       filterClientName,
@@ -96,7 +99,7 @@ const TotalActiveAgents = () => {
       ),
   })
 
-  if (isLoading)
+  if (isLoading || isRefetching)
     return (
       <p className=' text-base capitalize text-[#69C920]'>
         <span className=' flex items-center gap-2'>
@@ -105,7 +108,8 @@ const TotalActiveAgents = () => {
       </p>
     )
 
-  if (error) return <p className=' text-base text-[#69C920]'>Error</p>
+  if (error || isRefetchError)
+    return <p className=' text-base text-[#69C920]'>Error</p>
   if (data.message) {
     if (data.message === 'Not authenticated')
       return (

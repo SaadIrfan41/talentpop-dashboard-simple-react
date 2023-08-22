@@ -74,7 +74,7 @@ const TotalInternalMembers = () => {
   } = useFiltersStore()
   const { access_token } = useAuthStore()
 
-  const { data, isLoading, error } = useQuery({
+  const { isLoading, error } = useQuery({
     queryKey: [
       'total-internal-members',
       filterClientName,
@@ -106,7 +106,7 @@ const TotalInternalMembers = () => {
       </p>
     )
   if (error) return <p className=' text-base text-[#69C920]'>Error</p>
-  console.log(data)
+  // console.log(data)
   // if (data.message) {
   //   if (data.message === 'Not authenticated')
   //     return (
