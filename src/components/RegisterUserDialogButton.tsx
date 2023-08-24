@@ -31,7 +31,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import toast from 'react-hot-toast'
 import { z } from 'zod'
-import { Loader2 } from 'lucide-react'
+import { Copy, CopyCheck, Loader2 } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { useAuthStore } from '@/store/useAuthStore'
 // import { Input } from '@/components/ui/input'
@@ -48,11 +48,13 @@ const roles = [
   'Super Admin',
   'Admin',
 ]
+const userTypes = ['Internal Team', 'Candidate', 'Customer']
 
 export function RegisterUserDialogButton() {
   const [open, setopen] = useState(false)
   const { access_token } = useAuthStore()
   const [randomPassword, setrandomPassword] = useState('')
+  const [copy, setCopy] = useState(false)
   // const [showPassword, setshowPassword] = useState(false)
 
   const form = useForm<z.infer<typeof registerFormSchema>>({
@@ -61,8 +63,7 @@ export function RegisterUserDialogButton() {
       email: '',
       password: randomPassword,
       job_title: '',
-      role: 'Admin',
-      // role: 'Team Lead',
+      name: '',
     },
   })
 
@@ -77,13 +78,16 @@ export function RegisterUserDialogButton() {
         'content-type': 'application/json',
       },
       body: JSON.stringify({
-        username: values.email,
+        email: values.email,
+        name: values.name,
         password: values.password,
         job_title: values.job_title,
+        usertype: values.usertype,
         role: values.role,
       }),
     })
     const data = await res.json()
+    console.log(data)
 
     if (data.detail) {
       toast.error(data.detail)
@@ -104,8 +108,17 @@ export function RegisterUserDialogButton() {
     // This effect will trigger whenever randomPassword changes
     if (randomPassword) {
       form.setValue('password', randomPassword)
+      form.clearErrors('password')
     }
   }, [randomPassword, form])
+
+  const copyToClipboard = () => {
+    setCopy(true)
+    navigator.clipboard.writeText(randomPassword)
+    setTimeout(() => {
+      setCopy(false)
+    }, 2000)
+  }
 
   return (
     <Dialog open={open} onOpenChange={setopen}>
@@ -136,26 +149,57 @@ export function RegisterUserDialogButton() {
                 </FormItem>
               )}
             />
+            <FormField
+              control={form.control}
+              name='name'
+              render={({ field }) => (
+                <FormItem className=' max-w-md '>
+                  <FormControl>
+                    <Input
+                      className='  placeholder:text-lg placeholder:font-normal focus-visible:ring-[#69C920] focus-visible:ring-offset-1 focus-visible:ring-offset-[#69C920] '
+                      placeholder='Name'
+                      {...field}
+                    />
+                  </FormControl>
+
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
             <div className='flex flex-col gap-y-2'>
-              <FormField
-                control={form.control}
-                name='password'
-                render={({ field }) => (
-                  <FormItem className=' max-w-md'>
-                    <FormControl>
-                      <Input
-                        className='  placeholder:text-lg placeholder:font-normal focus-visible:ring-[#69C920] focus-visible:ring-offset-1 focus-visible:ring-offset-[#69C920] '
-                        placeholder='Password'
-                        {...field}
-                        value={randomPassword}
-                      />
-                    </FormControl>
+              <div className='flex gap-x-2 items-center'>
+                <FormField
+                  control={form.control}
+                  name='password'
+                  render={({ field }) => (
+                    <FormItem className=' max-w-md flex-1'>
+                      <FormControl>
+                        <Input
+                          // disabled={true}
+                          className='  placeholder:text-lg placeholder:font-normal focus-visible:ring-[#69C920] focus-visible:ring-offset-1 focus-visible:ring-offset-[#69C920] '
+                          placeholder='Password'
+                          {...field}
+                          value={randomPassword}
+                        />
+                      </FormControl>
 
-                    <FormMessage />
-                  </FormItem>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                {copy ? (
+                  <CopyCheck className=' text-[#69C920]' />
+                ) : (
+                  <button
+                    disabled={randomPassword === ''}
+                    className=' cursor-pointer disabled:cursor-not-allowed'
+                    onClick={() => copyToClipboard()}
+                  >
+                    <Copy />
+                  </button>
                 )}
-              />
+              </div>
               <Button
                 // disabled={form.formState.isSubmitting}
                 asChild
@@ -187,6 +231,32 @@ export function RegisterUserDialogButton() {
             />
             <FormField
               control={form.control}
+              name='usertype'
+              render={({ field }) => (
+                <FormItem className=' max-w-xs   '>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <FormControl className=' text-lg font-normal text-black/60 focus:ring-1 focus:ring-[#69C920]  focus:ring-offset-1 focus:ring-offset-[#69C920]'>
+                      <SelectTrigger>
+                        <SelectValue placeholder='Select User Type' />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {userTypes.map((value, index) => (
+                        <SelectItem key={index} value={value}>
+                          {value}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
               name='role'
               render={({ field }) => (
                 <FormItem className=' max-w-xs   '>
@@ -196,7 +266,7 @@ export function RegisterUserDialogButton() {
                   >
                     <FormControl className=' text-lg font-normal text-black/60 focus:ring-1 focus:ring-[#69C920]  focus:ring-offset-1 focus:ring-offset-[#69C920]'>
                       <SelectTrigger>
-                        <SelectValue placeholder='Select your Role' />
+                        <SelectValue placeholder='Select User Role' />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
