@@ -53,15 +53,17 @@ const ClientsNameFilter = () => {
 
   useEffect(() => {
     if (data) {
-      const projectNameList = data.map((project: any) => {
-        const projectName = project['projects.name']
-        const indexOfHyphen = projectName.indexOf('-')
-        if (indexOfHyphen !== -1 && indexOfHyphen + 1 < projectName.length) {
-          return projectName.substring(indexOfHyphen + 1).trim()
-        } else {
-          return projectName.trim()
-        }
-      })
+      const projectNameList = data
+        .map((project: any) => {
+          const projectName = project['projects.name']
+          const indexOfHyphen = projectName.indexOf('-')
+          if (indexOfHyphen !== -1 && indexOfHyphen + 1 < projectName.length) {
+            return projectName.substring(indexOfHyphen + 1).trim()
+          } else {
+            return projectName.trim()
+          }
+        })
+        .sort()
       setFilteredData(projectNameList)
       setclientNames(projectNameList)
     }
@@ -269,6 +271,10 @@ const ClientsNameFilter = () => {
   }
   // console.log(loadingFilter === true)
 
+  const clearFilter = () => {
+    setResetClientNames(true), addClientNames([])
+  }
+
   return (
     <div style={{ zIndex: 10 }}>
       <button
@@ -315,6 +321,13 @@ const ClientsNameFilter = () => {
                     Search
                   </button>
                 </div>
+                <button
+                  type='button'
+                  onClick={() => clearFilter()}
+                  className=' relative inset-y-0 right-0 -ml-px flex items-center space-x-2 rounded-full  border bg-[#69C920] px-4   py-2 pl-3 text-sm font-medium  text-white  focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500'
+                >
+                  Clear Filter
+                </button>
                 <button
                   type='button'
                   onClick={() => addClientNames(selectedNames)}

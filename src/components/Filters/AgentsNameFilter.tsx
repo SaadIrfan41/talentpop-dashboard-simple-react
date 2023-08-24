@@ -175,6 +175,9 @@ const AgentsNameFilter = () => {
       )
     })
   }
+  const clearFilter = () => {
+    setResetresetAgentsNames(true), addAgentsNames([])
+  }
 
   if (isLoading)
     return (
@@ -239,6 +242,13 @@ const AgentsNameFilter = () => {
                     Search
                   </button>
                 </div>
+                <button
+                  type='button'
+                  onClick={() => clearFilter()}
+                  className=' relative inset-y-0 right-0 -ml-px flex items-center space-x-2 rounded-full  border bg-[#69C920] px-4   py-2 pl-3 text-sm font-medium  text-white  focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500'
+                >
+                  Clear Filter
+                </button>
                 <button
                   type='button'
                   onClick={() => addAgentsNames(selectedNames)}

@@ -51,6 +51,7 @@ const TeamLeadsNameFilter = () => {
   const [teamLeadNames, setTeamLeadNames] = useState([])
 
   const { addTeamLeadsNames } = useFiltersStore()
+
   useEffect(() => {
     if (data) {
       const TeamLeadList = data
@@ -175,6 +176,10 @@ const TeamLeadsNameFilter = () => {
     })
   }
 
+  const clearFilter = () => {
+    setResetTeamLeadsNames(true), addTeamLeadsNames([])
+  }
+
   if (isLoading)
     return (
       <>
@@ -238,6 +243,13 @@ const TeamLeadsNameFilter = () => {
                     Search
                   </button>
                 </div>
+                <button
+                  type='button'
+                  onClick={() => clearFilter()}
+                  className=' relative inset-y-0 right-0 -ml-px flex items-center space-x-2 rounded-full  border bg-[#69C920] px-4   py-2 pl-3 text-sm font-medium  text-white  focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500'
+                >
+                  Clear Filter
+                </button>
                 <button
                   type='button'
                   onClick={() => addTeamLeadsNames(selectedNames)}

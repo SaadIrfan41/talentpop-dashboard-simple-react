@@ -38,6 +38,17 @@ import { useAuthStore } from '@/store/useAuthStore'
 // import { Label } from '@/components/ui/label'
 // import RegisterForm from './Forms/RegisterForm'
 
+const roles = [
+  'Team Lead',
+  'Customer Success Manager',
+  'Customer Success Manager II',
+  'Recruitment Manager',
+  'Recruitment Specialist',
+  'Operations Manager',
+  'Super Admin',
+  'Admin',
+]
+
 export function RegisterUserDialogButton() {
   const [open, setopen] = useState(false)
   const { access_token } = useAuthStore()
@@ -107,7 +118,7 @@ export function RegisterUserDialogButton() {
           <DialogDescription>Enter credentials for csm user</DialogDescription>
         </DialogHeader>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-8 '>
+          <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-5 '>
             <FormField
               control={form.control}
               name='email'
@@ -126,7 +137,7 @@ export function RegisterUserDialogButton() {
               )}
             />
 
-            <div>
+            <div className='flex flex-col gap-y-2'>
               <FormField
                 control={form.control}
                 name='password'
@@ -145,9 +156,16 @@ export function RegisterUserDialogButton() {
                   </FormItem>
                 )}
               />
-              <button type='button' onClick={() => GeneratePassword()}>
-                Generate Password
-              </button>
+              <Button
+                // disabled={form.formState.isSubmitting}
+                asChild
+                className=' bg-[#69C920] px-2  text-sm w-fit '
+                type='button'
+              >
+                <button type='button' onClick={() => GeneratePassword()}>
+                  Generate Password
+                </button>
+              </Button>
             </div>
 
             <FormField
@@ -172,7 +190,6 @@ export function RegisterUserDialogButton() {
               name='role'
               render={({ field }) => (
                 <FormItem className=' max-w-xs   '>
-                  {/* <FormLabel>Role</FormLabel> */}
                   <Select
                     onValueChange={field.onChange}
                     defaultValue={field.value}
@@ -183,15 +200,11 @@ export function RegisterUserDialogButton() {
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      <SelectItem value='Team Lead'>Team Lead</SelectItem>
-                      <SelectItem value='Customer Success Manager'>
-                        Customer Success Manager
-                      </SelectItem>
-                      <SelectItem value='Customer Success Manager II'>
-                        Customer Success Manager II
-                      </SelectItem>
-                      <SelectItem value='Super Admin'>Super Admin</SelectItem>
-                      <SelectItem value='Admin'>Admin</SelectItem>
+                      {roles.map((value, index) => (
+                        <SelectItem key={index} value={value}>
+                          {value}
+                        </SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
                   <FormMessage />
@@ -215,23 +228,6 @@ export function RegisterUserDialogButton() {
             </Button>
           </form>
         </Form>
-        {/* <div className='grid gap-4 py-4'>
-          <div className='grid grid-cols-4 items-center gap-4'>
-            <Label htmlFor='name' className='text-right'>
-              Name
-            </Label>
-            <Input id='name' value='Pedro Duarte' className='col-span-3' />
-          </div>
-          <div className='grid grid-cols-4 items-center gap-4'>
-            <Label htmlFor='username' className='text-right'>
-              Username
-            </Label>
-            <Input id='username' value='@peduarte' className='col-span-3' />
-          </div>
-        </div> */}
-        {/* <DialogFooter>
-          <Button type='submit'>Save changes</Button>
-        </DialogFooter> */}
       </DialogContent>
     </Dialog>
   )

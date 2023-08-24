@@ -25,6 +25,7 @@ import {
 import { CalendarIcon } from 'lucide-react'
 
 import { useFiltersStore } from '@/store/useFiltersStore'
+import { useEffect, useState } from 'react'
 
 const FormSchema = z.object({
   starting_date: z.date({
@@ -42,6 +43,7 @@ export function DatePickerForm() {
     startingDateFilter,
     endingDateFilter,
   } = useFiltersStore()
+  const [resetDates, setresetDates] = useState(false)
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -59,6 +61,18 @@ export function DatePickerForm() {
     addstartingdate(startDate)
     addendingdate(endDate)
   }
+  const clearFilter = () => {
+    setresetDates(true)
+    addstartingdate('')
+    addendingdate('')
+  }
+  useEffect(() => {
+    // This effect will trigger whenever randomPassword changes
+    if (resetDates) {
+      form.setValue('starting_date', new Date())
+      form.setValue('ending_date', new Date())
+    }
+  }, [form, resetDates])
 
   return (
     <Form {...form}>
@@ -159,9 +173,19 @@ export function DatePickerForm() {
             </FormItem>
           )}
         />
-        <Button className=' bg-[#69C920]' type='submit'>
-          Filter
-        </Button>
+        <div className='flex justify-between'>
+          <Button
+            size={'sm'}
+            onClick={() => clearFilter()}
+            className=' bg-[#69C920] text-sm '
+            type='button'
+          >
+            Clear Filter
+          </Button>
+          <Button size={'sm'} className=' bg-[#69C920]' type='submit'>
+            Filter
+          </Button>
+        </div>
       </form>
     </Form>
   )
