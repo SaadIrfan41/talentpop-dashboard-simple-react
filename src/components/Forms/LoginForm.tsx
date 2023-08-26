@@ -36,7 +36,7 @@ const LoginForm = () => {
     const formData = new URLSearchParams()
     formData.append('username', values.email)
     formData.append('password', values.password)
-    const res = await fetch('http://18.237.25.116:8000/login', {
+    const res = await fetch('http://44.240.77.70:8000/login', {
       method: 'POST',
       body: formData,
     })

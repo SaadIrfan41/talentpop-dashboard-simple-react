@@ -20,7 +20,7 @@ const ClientsNameFilter = () => {
   const getCientNames = async () => {
     try {
       const res = await fetch(
-        'http://18.237.25.116:8000/get-client-names-for-filter',
+        'http://44.240.77.70:8000/get-client-names-for-filter',
         {
           headers: {
             accept: 'application/json',

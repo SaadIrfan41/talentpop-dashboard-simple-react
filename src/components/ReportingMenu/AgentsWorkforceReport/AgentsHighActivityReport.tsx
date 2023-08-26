@@ -44,7 +44,7 @@ const getAgentHighActivityReport = async (
 
   try {
     const res = await fetch(
-      `http://18.237.25.116:8000/high-activity-rate-report-agents?${clientQueryParam}&${agentsQueryParam}&${teamLeadQueryParam}&${OM_QueryParam}&${CSM_QueryParam}&startdate=${startingDateFilter}&enddate=${endingDateFilter}`,
+      `http://44.240.77.70:8000/high-activity-rate-report-agents?${clientQueryParam}&${agentsQueryParam}&${teamLeadQueryParam}&${OM_QueryParam}&${CSM_QueryParam}&startdate=${startingDateFilter}&enddate=${endingDateFilter}`,
       {
         headers: {
           accept: 'application/json',

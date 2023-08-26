@@ -33,7 +33,7 @@ const RegisterForm = () => {
     formData.append('password', values.password)
     formData.append('job_title', values.job_title)
     formData.append('role', values.role)
-    const res = await fetch('http://18.237.25.116:8000/register', {
+    const res = await fetch('http://44.240.77.70:8000/register', {
       method: 'POST',
       body: formData,
     })

@@ -51,7 +51,7 @@ const getAgentsReportAVG = async (
 
   try {
     const res = await fetch(
-      `http://18.237.25.116:8000/rolling-average-agent-activity-report?${clientQueryParam}&${agentsQueryParam}&${teamLeadQueryParam}&${OM_QueryParam}&${CSM_QueryParam}&startdate=${startingDateFilter}&enddate=${endingDateFilter}&page=${pageParam}`,
+      `http://44.240.77.70:8000/rolling-average-agent-activity-report?${clientQueryParam}&${agentsQueryParam}&${teamLeadQueryParam}&${OM_QueryParam}&${CSM_QueryParam}&startdate=${startingDateFilter}&enddate=${endingDateFilter}&page=${pageParam}`,
       {
         headers: {
           accept: 'application/json',

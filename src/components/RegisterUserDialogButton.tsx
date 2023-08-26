@@ -1,6 +1,4 @@
 import { Button } from '@/components/ui/button'
-// import { useId } from 'react'
-// import generator from 'generate-password'
 import { v4 as uuidv4 } from 'uuid'
 import {
   Form,
@@ -34,6 +32,8 @@ import { z } from 'zod'
 import { Copy, CopyCheck, Loader2 } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { useAuthStore } from '@/store/useAuthStore'
+// import copyTextToClipboard from 'copy-text-to-clipboard'
+import { CopyToClipboard } from 'react-copy-to-clipboard'
 // import { Input } from '@/components/ui/input'
 // import { Label } from '@/components/ui/label'
 // import RegisterForm from './Forms/RegisterForm'
@@ -44,7 +44,7 @@ const roles = [
   'Customer Success Manager II',
   'Recruitment Manager',
   'Recruitment Specialist',
-  'Operations Manager',
+  'Operations Manager',
   'Super Admin',
   'Admin',
 ]
@@ -69,7 +69,7 @@ export function RegisterUserDialogButton() {
 
   async function onSubmit(values: z.infer<typeof registerFormSchema>) {
     console.log(values)
-    const res = await fetch('http://18.237.25.116:8000/register', {
+    const res = await fetch('http://44.240.77.70:8000/register', {
       method: 'POST',
 
       headers: {
@@ -114,7 +114,8 @@ export function RegisterUserDialogButton() {
 
   const copyToClipboard = () => {
     setCopy(true)
-    navigator.clipboard.writeText(randomPassword)
+
+    // navigator.clipboard.writeText(randomPassword)
     setTimeout(() => {
       setCopy(false)
     }, 2000)
@@ -177,6 +178,7 @@ export function RegisterUserDialogButton() {
                       <FormControl>
                         <Input
                           // disabled={true}
+                          readOnly={true}
                           className='  placeholder:text-lg placeholder:font-normal focus-visible:ring-[#69C920] focus-visible:ring-offset-1 focus-visible:ring-offset-[#69C920] '
                           placeholder='Password'
                           {...field}
@@ -191,13 +193,18 @@ export function RegisterUserDialogButton() {
                 {copy ? (
                   <CopyCheck className=' text-[#69C920]' />
                 ) : (
-                  <button
-                    disabled={randomPassword === ''}
-                    className=' cursor-pointer disabled:cursor-not-allowed'
-                    onClick={() => copyToClipboard()}
+                  <CopyToClipboard
+                    text={randomPassword}
+                    onCopy={() => copyToClipboard()}
                   >
-                    <Copy />
-                  </button>
+                    <button
+                      disabled={randomPassword === ''}
+                      className=' cursor-pointer disabled:cursor-not-allowed'
+                      onClick={() => copyToClipboard()}
+                    >
+                      <Copy />
+                    </button>
+                  </CopyToClipboard>
                 )}
               </div>
               <Button
